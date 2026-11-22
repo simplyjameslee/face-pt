@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>동안 얼굴 · 얼굴 PT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0d12; --card:#1a1720; --line:#2c2733; --ink:#f4eff6; --mute:#a39bab;
+    --accent:#ff8fa3; --accent2:#ffd3a5; --ok:#7ee0b5; --warn:#ffcf66;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;border:0;cursor:pointer}
+  .screen{display:none;min-height:100%;padding:24px 20px 40px;max-width:520px;margin:0 auto}
+  .screen.on{display:block}
+  /* Home */
+  .brand{margin-top:8vh}
+  .brand small{color:var(--accent);font-weight:700;letter-spacing:.12em;font-size:12px}
+  .brand h1{font-size:44px;font-weight:900;line-height:1.1;margin:10px 0 6px;
+    background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .brand p{color:var(--mute);line-height:1.6}
+  .cta{display:block;width:100%;margin:32px 0 16px;padding:18px;border-radius:16px;font-weight:700;font-size:18px;
+    background:linear-gradient(120deg,var(--accent),#ff6f91);color:#1a0c12;box-shadow:0 10px 30px -10px #ff6f9180}
+  .cta:active{transform:scale(.98)}
+  .ghost{display:block;width:100%;padding:14px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-weight:500}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px}
+  .card h3{font-size:15px;margin-bottom:8px}
+  .card p,.card li{color:var(--mute);font-size:14px;line-height:1.65}
+  .card ul{padding-left:18px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0}
+  .row label{font-size:14px}
+  input[type=range]{width:55%;accent-color:var(--accent)}
+  .switch{position:relative;width:46px;height:26px;background:var(--line);border-radius:20px;transition:.2s}
+  .switch.on{background:var(--accent)}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
+  .switch.on::after{left:23px}
+  .stats{display:flex;gap:10px;margin-top:14px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:24px;font-weight:900}
+  .stat span{font-size:12px;color:var(--mute)}
+  /* Camera */
+  #cam{padding:0;max-width:none}
+  .stage{position:fixed;inset:0;background:#000;overflow:hidden}
+  video,#overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+  .hud-top{position:absolute;top:0;left:0;right:0;padding:16px 16px 40px;background:linear-gradient(#000c,#0000)}
+  .hud-top .step{font-size:12px;color:var(--accent2);font-weight:700;letter-spacing:.08em}
+  .hud-top h2{font-size:26px;font-weight:900;margin:4px 0}
+  .hud-top p{font-size:14px;color:#ddd;line-height:1.5}
+  .tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;background:#ffffff1f;margin-top:6px}
+  .hud-bot{position:absolute;bottom:0;left:0;right:0;padding:40px 16px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(#0000,#000d)}
+  .meter{height:10px;border-radius:10px;background:#ffffff26;overflow:hidden;margin:10px 0 4px}
+  .meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .08s}
+  .meter.met i{background:var(--ok)}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:#ccc}
+  .controls{display:flex;gap:10px;margin-top:12px}
+  .controls button{flex:1;padding:13px;border-radius:14px;background:#ffffff1c;backdrop-filter:blur(8px);font-weight:500;font-size:14px}
+  .ring{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:96px;height:96px}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .num b{font-size:26px;font-weight:900}
+  .ring .num span{font-size:11px;color:#ccc}
+  .toast{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);background:#000b;padding:14px 20px;border-radius:14px;
+    font-weight:700;font-size:16px;text-align:center;display:none;max-width:80%}
+  .toast.on{display:block}
+  .big{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:84px;font-weight:900;color:var(--ok);
+    text-shadow:0 4px 30px #000;opacity:0;transition:opacity .2s;pointer-events:none}
+  .big.on{opacity:1}
+  .sheet{position:absolute;left:0;right:0;bottom:0;max-height:88%;overflow:auto;background:var(--bg);border-radius:24px 24px 0 0;
+    padding:22px 20px calc(24px + env(safe-area-inset-bottom));display:none;border-top:1px solid var(--line)}
+  .sheet.on{display:block}
+  .sheet h2{font-size:22px;font-weight:900}
+  .finding{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+  .finding:last-child{border:0}
+  .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--ok)}
+  .dot.w{background:var(--warn)}
+  .finding b{font-size:14px}
+  .finding p{font-size:13px;color:var(--mute);line-height:1.55}
+  .plan li{font-size:14px;padding:6px 0;color:var(--ink);list-style:none;display:flex;justify-content:space-between}
+  .plan li span{color:var(--mute);font-size:12px}
+  .loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#000;color:var(--mute);font-size:14px;text-align:center;padding:30px}
+  .spin{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:s 1s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .err{color:#ff9a9a}
+  .foot{font-size:11px;color:#6f6878;margin-top:22px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<section id="home" class="screen on">
+  <div class="brand">
+    <small>FACE PT · 얼굴 PT</small>
+    <h1>동안 얼굴</h1>
+    <p>전면 카메라로 표정 근육을 추적하면서<br>제대로 하고 있는지 실시간으로 코칭해 드려요.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b id="sStreak">0</b><span>연속 일수</span></div>
+    <div class="stat"><b id="sTotal">0</b><span>총 세션</span></div>
+    <div class="stat"><b id="sSym">–</b><span>최근 미소 대칭</span></div>
+  </div>
+
+  <button class="cta" id="btnStart">카메라 켜고 시작하기</button>
+
+  <div class="card">
+    <h3>설정</h3>
+    <div class="row"><label>음성 안내</label><div class="switch on" id="swVoice"></div></div>
+    <div class="row"><label>인식 민감도 <span id="sensLbl" style="color:var(--mute)"></span></label>
+      <input type="range" id="sens" min="0.6" max="1.3" step="0.05" value="1"></div>
+    <p style="font-size:12px">동작을 해도 인식이 안 되면 민감도를 낮추세요 (왼쪽 = 쉽게 인식).</p>
+  </div>
+
+  <div class="card">
+    <h3>진행 방식</h3>
+    <ul>
+      <li>무표정 3초 측정 → 평소 표정 습관(미간 힘, 입꼬리, 고개 각도) 분석</li>
+      <li>분석 결과에 맞춰 7가지 동작 순서를 추천</li>
+      <li>각 동작을 정확히 유지해야 카운트가 올라가요</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>근거는 어느 정도?</h3>
+    <p>가장 많이 인용되는 연구(Northwestern, JAMA Dermatology 2018)는 중년 여성 16명이 20주 동안 매일 30분 얼굴 운동을 한 결과, 피부과 전문의 평가에서 볼 윗부분·아랫부분 볼륨이 개선되고 추정 나이가 약 3살 젊게 평가됐다고 보고했어요. 다만 소규모·대조군 없는 연구라 효과 크기는 확실하지 않습니다. 꾸준함이 핵심이고, 자외선 차단·수면이 더 큰 변수예요.</p>
+  </div>
+  <p class="foot">모든 영상 처리는 기기 안에서만 이뤄지며 서버로 전송되지 않습니다. 의료 조언이 아니며, 턱관절 통증이 있으면 턱 관련 동작은 건너뛰세요.</p>
+</section>
+
+<!-- CAMERA -->
+<section id="cam" class="screen">
+  <div class="stage">
+    <video id="video" playsinline muted></video>
+    <canvas id="overlay"></canvas>
+
+    <div class="hud-top">
+      <div class="step" id="hStep">준비</div>
+      <h2 id="hName">얼굴을 화면 중앙에</h2>
+      <p id="hDesc">정면을 보고 편하게 무표정을 유지하세요.</p>
+      <span class="tag" id="hTag" style="display:none"></span>
+    </div>
+
+    <div class="ring" id="ring" style="display:none">
+      <svg width="96" height="96"><circle cx="48" cy="48" r="42" stroke="#ffffff26" stroke-width="8" fill="none"/>
+        <circle id="ringArc" cx="48" cy="48" r="42" stroke="#7ee0b5" stroke-width="8" fill="none" stroke-linecap="round"
+          stroke-dasharray="263.9" stroke-dashoffset="263.9"/></svg>
+      <div class="num"><b id="rNum">0/0</b><span id="rLbl">회</span></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="big" id="big">✓</div>
+
+    <div class="hud-bot">
+      <div class="meta"><span id="mLabel">동작 정확도</span><span id="mVal"></span></div>
+      <div class="meter" id="meter"><i id="meterFill"></i></div>
+      <div class="controls">
+        <button id="btnPause">일시정지</button>
+        <button id="btnSkip">건너뛰기</button>
+        <button id="btnQuit">종료</button>
+      </div>
+    </div>
+
+    <div class="sheet" id="planSheet">
+      <h2>표정 습관 분석</h2>
+      <p style="color:var(--mute);font-size:13px;margin:4px 0 8px">무표정 3초 기준 · 노화 진단이 아닌 근육 긴장 패턴이에요</p>
+      <div id="findings"></div>
+      <div class="card" style="margin-top:10px"><h3>오늘의 추천 루틴</h3><ul class="plan" id="planList"></ul></div>
+      <button class="cta" id="btnGo" style="margin-top:18px">루틴 시작</button>
+    </div>
+
+    <div class="sheet" id="doneSheet">
+      <h2>오늘 얼굴 PT 완료 🎉</h2>
+      <div class="stats" id="doneStats"></div>
+      <div class="card"><h3>동작별 기록</h3><ul class="plan" id="doneList"></ul></div>
+      <div class="card" id="doneTip"></div>
+      <button class="cta" id="btnHome" style="margin-top:18px">처음으로</button>
+    </div>
+
+    <div class="loading" id="loading"><div class="spin"></div><div id="loadMsg">얼굴 인식 모델 불러오는 중…</div></div>
+  </div>
+</section>
+
+<script type="module">
+import { FaceLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+
+/* ---------- storage ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+let settings = store.get("fpt_settings", { voice: true, sens: 1 });
+
+/* ---------- exercises ---------- */
+// Region landmark indices (MediaPipe 478-point mesh) highlighted on overlay
+const R = {
+  cheeks: [50,280,101,330,123,352,117,346,187,411,205,425,36,266],
+  jaw: [152,148,176,149,150,136,172,58,132,377,400,378,379,365,397,288,361],
+  eyes: [33,133,159,145,160,144,158,153,362,263,386,374,387,373,385,380],
+  brow: [9,8,107,336,55,285,65,295,66,296,151],
+  mouth: [61,291,0,17,13,14,78,308,40,270,91,321,37,267,84,314]
+};
+const avg = (b, l, r) => ((b[l] || 0) + (b[r] || 0)) / 2;
+const lvl = (v, thr) => clamp(v / (thr * settings.sens));
+
+const EX = {
+  smile: {
+    name: "광대 리프트", area: "광대 · 팔자", region: [...R.cheeks, ...R.mouth], type: "hold", hold: 5, reps: 4,
+    desc: "입을 다문 채 입꼬리를 최대한 귀 쪽으로 끌어올리고 버티세요. 광대가 올라가는 느낌.",
+    cue: "입꼬리를 귀 쪽으로 끌어올리고 5초 유지",
+    score: b => lvl(avg(b, "mouthSmileLeft", "mouthSmileRight"), 0.6)
+  },
+  oface: {
+    name: "O 페이스", area: "볼 · 팔자 · 중안부", region: [...R.cheeks, ...R.mouth], type: "hold", hold: 5, reps: 3,
+    desc: "입을 세로로 길게 'O' 모양으로 벌리고, 윗입술로 앞니를 덮은 채 버티세요.",
+    cue: "입을 오 모양으로 길게 벌리고 유지",
+    score: b => Math.min(lvl(b.jawOpen || 0, 0.35), lvl(b.mouthFunnel || 0, 0.22))
+  },
+  puff: {
+    name: "볼 풍선", area: "볼 · 입가", region: [...R.cheeks], type: "hold", hold: 5, reps: 3,
+    desc: "입에 공기를 가득 넣고 양 볼을 빵빵하게 부풀린 채 버티세요.",
+    cue: "볼에 바람을 넣고 빵빵하게 유지",
+    score: b => Math.max(lvl(b.cheekPuff || 0, 0.3), Math.min(lvl(b.cheekPuff || 0, 0.15), lvl(b.mouthPucker || 0, 0.35)))
+  },
+  neck: {
+    name: "목주름 키스", area: "턱선 · 목", region: [...R.jaw, ...R.mouth], type: "hold", hold: 5, reps: 3,
+    desc: "고개를 천장 쪽으로 젖히고 입술을 쭉 내밀어 천장에 뽀뽀하듯 버티세요.",
+    cue: "고개를 들고 천장에 뽀뽀하듯 입술 내밀기",
+    score: (b, p, base) => Math.min(lvl(b.mouthPucker || 0, 0.5), clamp(Math.abs(p.pitch - base.pitch) / 12))
+  },
+  jaw: {
+    name: "턱 내밀기", area: "이중턱 · 턱선", region: [...R.jaw], type: "hold", hold: 5, reps: 3,
+    desc: "아래턱을 앞으로 쭉 내밀어 아랫니가 윗니보다 앞에 오게 하고 버티세요.",
+    cue: "아래턱을 앞으로 쭉 내밀고 유지",
+    score: b => lvl(b.jawForward || 0, 0.3)
+  },
+  eyes: {
+    name: "눈 크게 · 가늘게", area: "눈가 · 눈밑", region: [...R.eyes], type: "alt", reps: 8,
+    desc: "눈을 최대한 크게 떴다가, 아랫눈꺼풀을 올리며 가늘게 찡그리기를 반복하세요.",
+    cue: "눈 크게, 그다음 가늘게. 반복",
+    labelA: "눈 크게!", labelB: "가늘게!",
+    scoreA: b => lvl(avg(b, "eyeWideLeft", "eyeWideRight"), 0.3),
+    scoreB: b => Math.max(lvl(avg(b, "eyeSquintLeft", "eyeSquintRight"), 0.45), lvl(avg(b, "eyeBlinkLeft", "eyeBlinkRight"), 0.55))
+  },
+  relax: {
+    name: "미간 풀기", area: "미간 · 이마", region: [...R.brow], type: "hold", hold: 10, reps: 1,
+    desc: "검지로 미간을 가볍게 원을 그리며 문지르면서, 이마와 미간 힘을 완전히 빼세요.",
+    cue: "미간 힘을 빼고 손가락으로 부드럽게 문지르기",
+    score: (b, p, base) => {
+      const down = avg(b, "browDownLeft", "browDownRight"), up = b.browInnerUp || 0;
+      const lim = Math.max(0.1, (base.bs.browDown || 0) * 0.8);
+      return down < lim && up < 0.3 ? 1 : clamp(1 - (down - lim) * 4);
+    }
+  }
+};
+
+/* ---------- state ---------- */
+let landmarker, video = $("video"), canvas = $("overlay"), ctx = canvas.getContext("2d");
+let stream, raf, lastT = 0, mode = "idle", paused = false;
+let bs = {}, pose = { pitch: 0, yaw: 0, roll: 0 }, faceOk = false, lms = null;
+let base = { bs: {}, pitch: 0, yaw: 0 }, calib = { t: 0, samples: [] };
+let routine = [], idx = 0, st = null, log = [], symSamples = [], sessionStart = 0;
+
+/* ---------- voice & sound ---------- */
+let actx;
+function beep(f = 880, d = 0.12) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.frequency.value = f; o.connect(g); g.connect(actx.destination);
+    g.gain.setValueAtTime(0.15, actx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + d);
+    o.start(); o.stop(actx.currentTime + d);
+  } catch {}
+}
+function say(t) {
+  if (!settings.voice || !window.speechSynthesis) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = "ko-KR"; u.rate = 1.05; speechSynthesis.speak(u); } catch {}
+}
+
+/* ---------- home ---------- */
+function refreshHome() {
+  const hist = store.get("fpt_hist", []);
+  $("sTotal").textContent = hist.length;
+  const days = new Set(hist.map(h => h.d));
+  let n = 0, d = new Date();
+  if (!days.has(ymd(d))) d.setDate(d.getDate() - 1);
+  while (days.has(ymd(d))) { n++; d.setDate(d.getDate() - 1); }
+  $("sStreak").textContent = n;
+  const last = hist.filter(h => h.sym != null).pop();
+  $("sSym").textContent = last ? last.sym + "%" : "–";
+  $("swVoice").classList.toggle("on", settings.voice);
+  $("sens").value = settings.sens; $("sensLbl").textContent = "×" + (+settings.sens).toFixed(2);
+}
+function ymd(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+$("swVoice").onclick = () => { settings.voice = !settings.voice; store.set("fpt_settings", settings); refreshHome(); };
+$("sens").oninput = e => { settings.sens = +e.target.value; store.set("fpt_settings", settings); refreshHome(); };
+refreshHome();
+
+function show(id) { document.querySelectorAll(".screen").forEach(s => s.classList.toggle("on", s.id === id)); }
+
+/* ---------- start ---------- */
+$("btnStart").onclick = async () => {
+  beep(660, 0.05); // unlock audio on user gesture
+  show("cam"); $("loading").style.display = "flex"; $("loadMsg").textContent = "카메라 권한을 요청하는 중…";
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+    video.srcObject = stream; await video.play();
+  } catch (e) {
+    $("loadMsg").innerHTML = `<span class="err">카메라를 켤 수 없어요.</span><br><br>• 브라우저에서 카메라 권한을 허용했는지 확인<br>• https:// 주소에서 열었는지 확인 (일반 파일·앱 미리보기에서는 막힐 수 있음)<br><br><button class="ghost" onclick="location.reload()">돌아가기</button>`;
+    return;
+  }
+  if (!landmarker) {
+    $("loadMsg").textContent = "얼굴 인식 모델 불러오는 중… (처음 한 번 ~5MB)";
+    try {
+      const fs = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+      const opts = d => ({
+        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task", delegate: d },
+        runningMode: "VIDEO", numFaces: 1, outputFaceBlendshapes: true, outputFacialTransformationMatrixes: true
+      });
+      try { landmarker = await FaceLandmarker.createFromOptions(fs, opts("GPU")); }
+      catch { landmarker = await FaceLandmarker.createFromOptions(fs, opts("CPU")); }
+    } catch (e) {
+      $("loadMsg").innerHTML = `<span class="err">모델을 불러오지 못했어요. 인터넷 연결을 확인하세요.</span><br><br><button class="ghost" onclick="location.reload()">돌아가기</button>`;
+      return;
+    }
+  }
+  $("loading").style.display = "none";
+  startCalib();
+  lastT = performance.now(); loop();
+};
+
+function startCalib() {
+  mode = "calib"; calib = { t: 0, samples: [] }; log = []; symSamples = []; idx = 0; paused = false;
+  $("planSheet").classList.remove("on"); $("doneSheet").classList.remove("on");
+  $("ring").style.display = "none"; $("hTag").style.display = "none";
+  $("hStep").textContent = "STEP 0 · 기준 측정";
+  $("hName").textContent = "무표정 3초";
+  $("hDesc").textContent = "정면을 보고 얼굴 힘을 빼세요. 평소 표정 습관을 측정합니다.";
+  say("정면을 보고 무표정으로 3초간 있어 주세요");
+}
+
+/* ---------- main loop ---------- */
+function loop() {
+  raf = requestAnimationFrame(loop);
+  const now = performance.now(), dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
+  if (video.readyState < 2) return;
+  if (canvas.width !== video.videoWidth) { canvas.width = video.videoWidth; canvas.height = video.videoHeight; }
+
+  let res;
+  try { res = landmarker.detectForVideo(video, now); } catch { return; }
+  faceOk = !!(res.faceLandmarks && res.faceLandmarks.length);
+  if (faceOk) {
+    lms = res.faceLandmarks[0];
+    const cats = res.faceBlendshapes?.[0]?.categories || [];
+    for (const c of cats) bs[c.categoryName] = bs[c.categoryName] == null ? c.score : bs[c.categoryName] * 0.45 + c.score * 0.55;
+    const m = res.facialTransformationMatrixes?.[0]?.data;
+    if (m) {
+      const r20 = m[2], r21 = m[6], r22 = m[10], r10 = m[1], r00 = m[0];
+      pose.pitch = Math.atan2(r21, r22) * 57.3;
+      pose.yaw = Math.atan2(-r20, Math.hypot(r21, r22)) * 57.3;
+      pose.roll = Math.atan2(r10, r00) * 57.3;
+    }
+  } else lms = null;
+
+  draw();
+  if (paused) return;
+
+  if (mode === "calib") stepCalib(dt);
+  else if (mode === "ex") stepEx(dt);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!lms) return;
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = "rgba(255,255,255,0.28)";
+  for (let i = 0; i < 468; i += 2) { const p = lms[i]; ctx.fillRect(p.x * W - 1, p.y * H - 1, 2, 2); }
+  const def = mode === "ex" ? EX[routine[idx]] : null;
+  if (def) {
+    const met = st && st.lastScore >= 1;
+    ctx.fillStyle = met ? "#7ee0b5" : "#ff8fa3";
+    for (const i of def.region) { const p = lms[i]; ctx.beginPath(); ctx.arc(p.x * W, p.y * H, 4, 0, 6.29); ctx.fill(); }
+  }
+}
+
+/* ---------- calibration & analysis ---------- */
+function stepCalib(dt) {
+  const frontal = faceOk && Math.abs(pose.yaw) < 18 && Math.abs(pose.roll) < 15;
+  if (!faceOk) { toast("얼굴이 보이지 않아요 · 화면 중앙으로"); setMeter(0); return; }
+  if (!frontal) { toast("정면을 봐 주세요"); return; }
+  toast("");
+  calib.t += dt; calib.samples.push({ ...bs, _p: pose.pitch, _y: pose.yaw });
+  setMeter(calib.t / 3, `${Math.ceil(3 - calib.t)}초`);
+  if (calib.t >= 3) analyze();
+}
+
+function analyze() {
+  const S = calib.samples, mean = k => S.reduce((a, s) => a + (s[k] || 0), 0) / S.length;
+  const b = {
+    browDown: (mean("browDownLeft") + mean("browDownRight")) / 2,
+    frown: (mean("mouthFrownLeft") + mean("mouthFrownRight")) / 2,
+    press: (mean("mouthPressLeft") + mean("mouthPressRight")) / 2,
+    squint: (mean("eyeSquintLeft") + mean("eyeSquintRight")) / 2,
+    jawOpen: mean("jawOpen"),
+    smileAsym: Math.abs(mean("mouthSmileLeft") - mean("mouthSmileRight"))
+  };
+  base = { bs: b, pitch: mean("_p"), yaw: mean("_y") };
+
+  const F = [], pri = [];
+  if (b.browDown > 0.15) { F.push(["w", "미간에 힘이 들어가 있어요", "무표정에서도 눈썹이 내려가 있어요. 미간 주름의 대표 원인이라 '미간 풀기'를 앞쪽에 배치했어요."]); pri.push("relax"); }
+  else F.push(["", "미간 긴장 낮음", "무표정 시 미간이 잘 풀려 있어요."]);
+  if (b.frown > 0.08 || b.press > 0.2) { F.push(["w", "입꼬리가 아래로 · 입술을 다무는 습관", "입가를 끌어내리는 힘이 감지됐어요. 광대 리프트와 O 페이스를 우선 배치했어요."]); pri.push("smile", "oface"); }
+  else F.push(["", "입가 긴장 낮음", "입꼬리가 중립 상태예요."]);
+  if (b.squint > 0.25) { F.push(["w", "눈을 찡그리는 경향", "무표정에서도 눈가에 힘이 들어가 있어요. 화면 밝기·시력도 점검해 보세요."]); pri.push("eyes"); }
+  if (base.pitch < -8 || base.pitch > 8) { F.push(["w", "고개가 기울어진 자세", "측정 중 고개가 위·아래로 기울어 있었어요. 거북목 자세는 턱선을 무너뜨리니 목 동작을 우선했어요."]); pri.push("neck", "jaw"); }
+  if (b.smileAsym > 0.06) F.push(["w", "좌우 비대칭 경향", "한쪽 입꼬리에 더 힘이 들어가 있어요. 광대 리프트 때 대칭을 측정할게요."]);
+
+  const all = ["smile", "oface", "puff", "neck", "jaw", "eyes", "relax"];
+  const order = [...new Set([...pri.filter(x => x !== "relax"), ...all.filter(x => x !== "relax")])];
+  routine = [...order, "relax"]; // always finish with relaxation
+
+  $("findings").innerHTML = F.map(([c, t, d]) => `<div class="finding"><div class="dot ${c}"></div><div><b>${t}</b><p>${d}</p></div></div>`).join("");
+  $("planList").innerHTML = routine.map((k, i) => {
+    const e = EX[k]; return `<li>${i + 1}. ${e.name}<span>${e.area} · ${e.type === "alt" ? e.reps + "회" : e.hold + "초×" + e.reps}</span></li>`;
+  }).join("");
+  mode = "plan"; setMeter(0, "");
+  $("hStep").textContent = "분석 완료"; $("hName").textContent = ""; $("hDesc").textContent = "";
+  $("planSheet").classList.add("on");
+  say("분석이 끝났어요. 추천 루틴을 확인하세요");
+}
+
+$("btnGo").onclick = () => {
+  $("planSheet").classList.remove("on");
+  sessionStart = performance.now(); idx = 0; startEx();
+};
+
+/* ---------- exercise engine ---------- */
+function startEx() {
+  const e = EX[routine[idx]];
+  st = { rep: 0, hold: 0, phase: "intro", t: 0, seq: 0, lastScore: 0, start: performance.now(), lost: 0 };
+  mode = "ex";
+  $("hStep").textContent = `${idx + 1} / ${routine.length}`;
+  $("hName").textContent = e.name;
+  $("hDesc").textContent = e.desc;
+  $("hTag").textContent = "타겟 · " + e.area; $("hTag").style.display = "inline-block";
+  $("ring").style.display = "block";
+  updateRing();
+  say(e.name + ". " + e.cue);
+}
+
+function stepEx(dt) {
+  const e = EX[routine[idx]];
+  if (!faceOk) { toast("얼굴이 보이지 않아요"); setMeter(0, ""); return; }
+  if (Math.abs(pose.yaw - base.yaw) > 25) { toast("정면을 봐 주세요"); return; }
+  toast("");
+  st.t += dt;
+
+  if (st.phase === "intro") {
+    setMeter(st.t / 2.5, "준비…");
+    if (st.t >= 2.5) { st.phase = "work"; st.t = 0; beep(660); }
+    return;
+  }
+
+  if (e.type === "hold") {
+    const s = e.score(bs, pose, base); st.lastScore = s;
+    if (st.phase === "work") {
+      if (s >= 1) { st.hold += dt; st.lost = 0; }
+      else { st.lost += dt; if (st.lost > 0.6) st.hold = Math.max(0, st.hold - dt * 0.5); }
+      if (routine[idx] === "smile" && s >= 1) {
+        const L = bs.mouthSmileLeft || 0, Rr = bs.mouthSmileRight || 0;
+        symSamples.push(1 - Math.abs(L - Rr) / Math.max(0.01, L + Rr));
+      }
+      setMeter(s, s >= 1 ? `유지 ${Math.max(0, e.hold - st.hold).toFixed(1)}초` : "조금 더!", s >= 1);
+      updateRing(st.hold / e.hold);
+      if (st.hold >= e.hold) {
+        st.rep++; beep(990); flash();
+        if (st.rep >= e.reps) return finishEx();
+        st.phase = "rest"; st.t = 0; st.hold = 0; say("좋아요. 힘 풀기");
+      }
+    } else if (st.phase === "rest") {
+      setMeter(0, "힘 빼고 쉬기");
+      $("meterFill").style.width = (clamp(st.t / 2) * 100) + "%";
+      if (st.t >= 2 && s < 0.6) { st.phase = "work"; st.t = 0; beep(660); say(e.cue); }
+    }
+  } else { // alternating
+    const a = e.scoreA(bs), b = e.scoreB(bs);
+    const s = st.seq === 0 ? a : b; st.lastScore = s;
+    setMeter(s, st.seq === 0 ? e.labelA : e.labelB, s >= 1);
+    if (st.seq === 0 && a >= 1) { st.seq = 1; beep(740, 0.06); }
+    else if (st.seq === 1 && b >= 1) {
+      st.seq = 0; st.rep++; beep(990, 0.08);
+      if (st.rep >= e.reps) { flash(); return finishEx(); }
+    }
+    updateRing();
+  }
+}
+
+function finishEx() {
+  const e = EX[routine[idx]];
+  log.push({ k: routine[idx], reps: st.rep, sec: Math.round((performance.now() - st.start) / 1000), skipped: st.rep < e.reps });
+  idx++;
+  if (idx >= routine.length) return finishSession();
+  st = null; setTimeout(startEx, 900);
+  mode = "between";
+}
+
+function finishSession() {
+  mode = "done";
+  const total = Math.round((performance.now() - sessionStart) / 1000);
+  const sym = symSamples.length ? Math.round(symSamples.reduce((a, b) => a + b, 0) / symSamples.length * 100) : null;
+  const hist = store.get("fpt_hist", []); hist.push({ d: ymd(new Date()), sym, t: total }); store.set("fpt_hist", hist.slice(-365));
+  refreshHome();
+  const done = log.filter(l => !l.skipped).length;
+  $("doneStats").innerHTML = `<div class="stat"><b>${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}</b><span>소요 시간</span></div>
+    <div class="stat"><b>${done}/${log.length}</b><span>완료 동작</span></div>
+    <div class="stat"><b>${sym ?? "–"}${sym != null ? "%" : ""}</b><span>미소 대칭</span></div>`;
+  $("doneList").innerHTML = log.map(l => `<li>${EX[l.k].name}<span>${l.skipped ? "건너뜀" : "✓ " + l.sec + "초"}</span></li>`).join("");
+  $("doneTip").innerHTML = `<h3>다음 단계</h3><p>${sym != null && sym < 85 ? "미소 대칭이 85% 미만이에요. 광대 리프트 때 약한 쪽을 의식해서 더 끌어올려 보세요. " : ""}연구에서 효과가 보인 건 매일 하는 습관이 최소 8주 이상 쌓였을 때예요. 같은 시간대에 하면 기록 비교가 정확해져요.</p>`;
+  $("ring").style.display = "none"; $("hTag").style.display = "none";
+  $("hStep").textContent = ""; $("hName").textContent = ""; $("hDesc").textContent = "";
+  setMeter(1, "");
+  $("doneSheet").classList.add("on");
+  say("오늘 얼굴 피티 완료! 수고했어요");
+}
+
+/* ---------- UI helpers ---------- */
+function setMeter(v, label = "", met = false) {
+  $("meterFill").style.width = (clamp(v) * 100) + "%";
+  $("meter").classList.toggle("met", met);
+  $("mVal").textContent = label;
+}
+function updateRing(frac) {
+  const e = EX[routine[idx]]; if (!e || !st) return;
+  const f = e.type === "alt" ? st.rep / e.reps : (frac ?? 0);
+  $("ringArc").style.strokeDashoffset = 263.9 * (1 - clamp(f));
+  $("rNum").textContent = `${st.rep}/${e.reps}`;
+  $("rLbl").textContent = e.type === "alt" ? "회" : "세트";
+}
+let toastTxt = "";
+function toast(t) { if (t === toastTxt) return; toastTxt = t; $("toast").textContent = t; $("toast").classList.toggle("on", !!t); }
+function flash() { $("big").classList.add("on"); setTimeout(() => $("big").classList.remove("on"), 450); }
+
+$("btnPause").onclick = () => {
+  paused = !paused; $("btnPause").textContent = paused ? "계속" : "일시정지";
+  toast(paused ? "일시정지" : "");
+};
+$("btnSkip").onclick = () => {
+  if (mode === "calib") { calib.t = 3; calib.samples.push({ ...bs, _p: pose.pitch, _y: pose.yaw }); analyze(); return; }
+  if (mode === "ex" && st) finishEx();
+};
+$("btnQuit").onclick = stopAll;
+$("btnHome").onclick = stopAll;
+
+function stopAll() {
+  cancelAnimationFrame(raf); mode = "idle"; paused = false; $("btnPause").textContent = "일시정지"; toast("");
+  try { speechSynthesis.cancel(); } catch {}
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  $("planSheet").classList.remove("on"); $("doneSheet").classList.remove("on");
+  refreshHome(); show("home");
+}
+</script>
+</body>
+</html>
