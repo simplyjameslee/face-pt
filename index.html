@@ -37,6 +37,32 @@
   .switch.on{background:var(--accent)}
   .switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s}
   .switch.on::after{left:23px}
+  /* Streak */
+  .streak{margin-top:26px;background:linear-gradient(135deg,#2a1620,#1a1720);border:1px solid #3a2530;border-radius:22px;padding:20px}
+  .streak .top{display:flex;align-items:center;gap:14px}
+  .flame{font-size:46px;line-height:1;filter:grayscale(1) opacity(.4);transition:.3s}
+  .flame.lit{filter:none;animation:flick 1.6s ease-in-out infinite}
+  @keyframes flick{50%{transform:scale(1.08) rotate(-3deg)}}
+  .streak .n{font-size:40px;font-weight:900;line-height:1}
+  .streak .n small{font-size:15px;font-weight:700;color:var(--mute);margin-left:4px}
+  .streak .sub{font-size:13px;color:var(--mute);margin-top:4px}
+  .streak .sub b{color:var(--accent2)}
+  .week{display:flex;justify-content:space-between;margin-top:16px}
+  .day{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--mute)}
+  .day i{width:32px;height:32px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:15px}
+  .day.done i{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#1a0c12;font-weight:900}
+  .day.today i{outline:2px solid var(--accent);outline-offset:2px}
+  .day.today{color:var(--ink);font-weight:700}
+  .badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+  .badge{text-align:center;font-size:11px;color:var(--mute);line-height:1.3}
+  .badge .ic{width:56px;height:56px;margin:0 auto 6px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;
+    background:var(--line);filter:grayscale(1) opacity(.35)}
+  .badge.got{color:var(--ink)}
+  .badge.got .ic{filter:none;background:linear-gradient(135deg,#3a2230,#2a2236);box-shadow:inset 0 0 0 1px #ff8fa355}
+  .badge .pg{display:block;font-size:10px;color:var(--mute);margin-top:2px}
+  .newbadge{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;background:linear-gradient(135deg,#3a2230,#2a2236);margin-top:10px;animation:pop .5s}
+  .newbadge .ic{font-size:34px}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.05)}}
   .stats{display:flex;gap:10px;margin-top:14px}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
   .stat b{display:block;font-size:24px;font-weight:900}
@@ -97,13 +123,30 @@
     <p>전면 카메라로 표정 근육을 추적하면서<br>제대로 하고 있는지 실시간으로 코칭해 드려요.</p>
   </div>
 
+  <div class="streak">
+    <div class="top">
+      <div class="flame" id="flame">🔥</div>
+      <div>
+        <div class="n" id="sStreak">0<small>일 연속</small></div>
+        <div class="sub" id="sStreakSub"></div>
+      </div>
+    </div>
+    <div class="week" id="week"></div>
+  </div>
+
+  <button class="cta" id="btnStart">카메라 켜고 시작하기</button>
+
   <div class="stats">
-    <div class="stat"><b id="sStreak">0</b><span>연속 일수</span></div>
+    <div class="stat"><b id="sBest">0</b><span>최고 연속</span></div>
     <div class="stat"><b id="sTotal">0</b><span>총 세션</span></div>
     <div class="stat"><b id="sSym">–</b><span>최근 미소 대칭</span></div>
   </div>
 
-  <button class="cta" id="btnStart">카메라 켜고 시작하기</button>
+  <div class="card">
+    <h3>배지 <span id="badgeCount" style="color:var(--mute);font-weight:400"></span></h3>
+    <div class="badges" id="badges"></div>
+    <p style="font-size:12px;margin-top:12px">7개 동작 중 4개 이상 완료해야 그날 기록으로 인정돼요. 기록은 이 브라우저에만 저장됩니다.</p>
+  </div>
 
   <div class="card">
     <h3>설정</h3>
@@ -172,6 +215,7 @@
 
     <div class="sheet" id="doneSheet">
       <h2>오늘 얼굴 PT 완료 🎉</h2>
+      <div id="doneBadges"></div>
       <div class="stats" id="doneStats"></div>
       <div class="card"><h3>동작별 기록</h3><ul class="plan" id="doneList"></ul></div>
       <div class="card" id="doneTip"></div>
@@ -282,14 +326,64 @@ function say(t) {
 }
 
 /* ---------- home ---------- */
+/* ---------- streak & badges ---------- */
+const BADGES = [
+  { id: "first", ic: "🌱", name: "첫 PT", need: s => s.total >= 1, prog: s => [s.total, 1] },
+  { id: "s3", ic: "🔥", name: "3일 연속", need: s => s.best >= 3, prog: s => [s.best, 3] },
+  { id: "s7", ic: "⭐", name: "일주일", need: s => s.best >= 7, prog: s => [s.best, 7] },
+  { id: "s14", ic: "💪", name: "2주 연속", need: s => s.best >= 14, prog: s => [s.best, 14] },
+  { id: "s30", ic: "🏅", name: "한 달", need: s => s.best >= 30, prog: s => [s.best, 30] },
+  { id: "s66", ic: "🧠", name: "습관 완성 66일", need: s => s.best >= 66, prog: s => [s.best, 66] },
+  { id: "s100", ic: "👑", name: "100일", need: s => s.best >= 100, prog: s => [s.best, 100] },
+  { id: "t10", ic: "🎯", name: "누적 10회", need: s => s.total >= 10, prog: s => [s.total, 10] },
+  { id: "t50", ic: "💎", name: "누적 50회", need: s => s.total >= 50, prog: s => [s.total, 50] },
+  { id: "early", ic: "🌅", name: "아침 PT", need: s => s.early >= 1, prog: s => [s.early, 1] },
+  { id: "sym", ic: "⚖️", name: "대칭 90%+", need: s => s.symMax >= 90, prog: s => [s.symMax, 90] },
+  { id: "perfect", ic: "✨", name: "전 동작 완료", need: s => s.perfect >= 1, prog: s => [s.perfect, 1] }
+];
+const dayNum = key => { const [y, m, d] = key.split("-").map(Number); return Math.round(new Date(y, m - 1, d).getTime() / 864e5); };
+function calcStats() {
+  const hist = store.get("fpt_hist", []).filter(h => h.ok !== false); // sessions that counted
+  const days = [...new Set(hist.map(h => h.d))].map(dayNum).sort((a, b) => a - b);
+  let best = 0, run = 0;
+  days.forEach((d, i) => { run = i && d - days[i - 1] === 1 ? run + 1 : 1; best = Math.max(best, run); });
+  const set = new Set(days), today = dayNum(ymd(new Date()));
+  let cur = 0, k = set.has(today) ? today : today - 1;
+  while (set.has(k)) { cur++; k--; }
+  return {
+    hist, set, today, cur, best, total: hist.length, doneToday: set.has(today),
+    early: hist.filter(h => h.h != null && h.h < 9).length,
+    symMax: Math.max(0, ...hist.map(h => h.sym || 0)),
+    perfect: hist.filter(h => h.perfect).length
+  };
+}
+function earnedIds(s) { return BADGES.filter(b => b.need(s)).map(b => b.id); }
+
 function refreshHome() {
-  const hist = store.get("fpt_hist", []);
-  $("sTotal").textContent = hist.length;
-  const days = new Set(hist.map(h => h.d));
-  let n = 0, d = new Date();
-  if (!days.has(ymd(d))) d.setDate(d.getDate() - 1);
-  while (days.has(ymd(d))) { n++; d.setDate(d.getDate() - 1); }
-  $("sStreak").textContent = n;
+  const s = calcStats(), hist = s.hist;
+  $("sTotal").textContent = s.total;
+  $("sBest").textContent = s.best;
+  $("sStreak").innerHTML = `${s.cur}<small>일 연속</small>`;
+  $("flame").classList.toggle("lit", s.doneToday);
+  const next = BADGES.filter(b => b.id[0] === "s" && b.id !== "sym" && !b.need(s))[0];
+  $("sStreakSub").innerHTML = s.doneToday
+    ? `오늘 완료! ${next ? `<b>${next.name}</b>까지 ${next.prog(s)[1] - s.cur}일` : "모든 연속 배지 달성 👑"}`
+    : s.cur > 0 ? `<b>오늘 하면 ${s.cur + 1}일</b> · 안 하면 연속 기록이 끊겨요` : "오늘부터 시작해 볼까요?";
+  const names = ["일", "월", "화", "수", "목", "금", "토"];
+  let w = "";
+  for (let i = 6; i >= 0; i--) {
+    const dt = new Date(); dt.setDate(dt.getDate() - i);
+    const on = s.set.has(dayNum(ymd(dt)));
+    w += `<div class="day ${on ? "done" : ""} ${i === 0 ? "today" : ""}"><i>${on ? "✓" : dt.getDate()}</i>${i === 0 ? "오늘" : names[dt.getDay()]}</div>`;
+  }
+  $("week").innerHTML = w;
+  const got = new Set(earnedIds(s));
+  $("badgeCount").textContent = `${got.size}/${BADGES.length}`;
+  $("badges").innerHTML = BADGES.map(b => {
+    const [p, t] = b.prog(s);
+    return `<div class="badge ${got.has(b.id) ? "got" : ""}"><div class="ic">${b.ic}</div>${b.name}${got.has(b.id) ? "" : `<span class="pg">${Math.min(p, t)}/${t}</span>`}</div>`;
+  }).join("");
+  store.set("fpt_badges", [...got]);
   const last = hist.filter(h => h.sym != null).pop();
   $("sSym").textContent = last ? last.sym + "%" : "–";
   $("swVoice").classList.toggle("on", settings.voice);
@@ -512,9 +606,20 @@ function finishSession() {
   mode = "done";
   const total = Math.round((performance.now() - sessionStart) / 1000);
   const sym = symSamples.length ? Math.round(symSamples.reduce((a, b) => a + b, 0) / symSamples.length * 100) : null;
-  const hist = store.get("fpt_hist", []); hist.push({ d: ymd(new Date()), sym, t: total }); store.set("fpt_hist", hist.slice(-365));
-  refreshHome();
   const done = log.filter(l => !l.skipped).length;
+  const ok = done >= 4, before = calcStats(), prevBadges = new Set(earnedIds(before));
+  const now = new Date();
+  const hist = store.get("fpt_hist", []);
+  hist.push({ d: ymd(now), h: now.getHours(), sym, t: total, ok, perfect: done === log.length });
+  store.set("fpt_hist", hist.slice(-1000));
+  refreshHome();
+  const after = calcStats(), fresh = BADGES.filter(b => b.need(after) && !prevBadges.has(b.id));
+  const streakMsg = !ok
+    ? `<div class="newbadge"><div class="ic">😅</div><div><b>오늘은 기록 X</b><p style="font-size:13px;color:var(--mute)">${done}개만 완료 · 4개 이상 해야 연속 기록에 들어가요</p></div></div>`
+    : `<div class="newbadge"><div class="ic">🔥</div><div><b>${after.cur}일 연속!</b><p style="font-size:13px;color:var(--mute)">${before.doneToday ? "오늘 이미 기록됨 · 추가 세션 완료" : "내일 또 오면 " + (after.cur + 1) + "일"}</p></div></div>`;
+  const badgeMsg = fresh.map(b => `<div class="newbadge"><div class="ic">${b.ic}</div><div><b>새 배지 · ${b.name}</b></div></div>`).join("");
+  $("doneBadges").innerHTML = streakMsg + badgeMsg;
+  if (fresh.length) setTimeout(() => { beep(880, 0.1); setTimeout(() => beep(1320, 0.15), 120); }, 600);
   $("doneStats").innerHTML = `<div class="stat"><b>${Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}</b><span>소요 시간</span></div>
     <div class="stat"><b>${done}/${log.length}</b><span>완료 동작</span></div>
     <div class="stat"><b>${sym ?? "–"}${sym != null ? "%" : ""}</b><span>미소 대칭</span></div>`;
