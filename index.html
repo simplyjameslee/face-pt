@@ -85,6 +85,38 @@
   .dots{display:flex;justify-content:center;gap:6px;margin-top:14px}
   .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
   .dots i.on{background:var(--accent);width:18px;border-radius:4px}
+  .back{width:auto;padding:10px 16px;margin-bottom:14px}
+  .ghero small{color:var(--accent);font-weight:700;letter-spacing:.12em;font-size:11px}
+  .ghero h1{font-size:28px;font-weight:900;margin:6px 0;background:linear-gradient(120deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .ghero p{color:var(--mute);font-size:13px;line-height:1.5}
+  .ben{display:flex;gap:8px;overflow-x:auto;margin:14px -20px 4px;padding:0 20px 6px;scrollbar-width:none}
+  .ben div{flex:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px}
+  .ben b{font-weight:700}
+  .ev{display:block;font-size:10.5px;margin-top:4px}
+  .ev.ok{color:var(--ok)} .ev.mid{color:var(--warn)} .ev.low{color:#ff9a9a}
+  .ggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+  .gcard{position:relative;background:linear-gradient(180deg,#2b2031,#1c1822);border:1px solid var(--line);border-radius:18px;padding:10px 8px 12px;text-align:center;color:var(--ink)}
+  .gcard:active{transform:scale(.97)}
+  .gcard svg{width:100%;height:130px;display:block}
+  .gcard b{display:block;font-size:15px;font-weight:700;margin-top:2px}
+  .gcard small{display:block;font-size:11px;color:var(--mute)}
+  .no{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#ff8a3d,#ff6f91);color:#fff;font-weight:900;font-size:13px;flex:none}
+  .gcard .no{position:absolute;top:8px;left:8px}
+  .chip{display:inline-block;margin-top:7px;font-size:11px;padding:4px 10px;border-radius:20px;background:#ffc93c26;color:#ffd77a;font-weight:500}
+  .how h3{margin-bottom:4px}
+  .howrow{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .howrow:last-child{border:0}
+  .howrow i{flex:none;width:24px;height:24px;border-radius:50%;background:#7c5cd6;color:#fff;font-style:normal;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .howrow b{font-size:14px}
+  .howrow p{font-size:13px}
+  .tut .head small{font-size:12px;color:var(--mute)}
+  .benefit{font-size:13.5px;color:var(--ink);line-height:1.6;margin-top:10px;padding:10px 12px;background:#ffffff0a;border-radius:12px}
+  .trow{margin-top:8px;font-size:13px;line-height:1.55;color:var(--mute)}
+  .trow b{color:var(--ink);margin-right:4px}
+  .trow.cam{padding:10px 12px;border-radius:12px;background:#7ee0b512;border:1px solid #7ee0b533}
+  .tip b{margin-right:4px}
+  .focus{background:#ff8fa333!important;color:var(--accent)!important}
+  .demo{width:190px;height:228px;border-radius:28px}
   .stats{display:flex;gap:10px;margin-top:14px}
   .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
   .stat b{display:block;font-size:24px;font-weight:900}
@@ -168,7 +200,7 @@
   <div class="card">
     <h3>배지 <span id="badgeCount" style="color:var(--mute);font-weight:400"></span></h3>
     <div class="badges" id="badges"></div>
-    <p style="font-size:12px;margin-top:12px">7개 동작 중 4개 이상 완료해야 그날 기록으로 인정돼요. 기록은 이 브라우저에만 저장됩니다.</p>
+    <p style="font-size:12px;margin-top:12px">동작의 절반 이상 완료해야 그날 기록으로 인정돼요. 기록은 이 브라우저에만 저장됩니다.</p>
   </div>
 
   <div class="card">
@@ -198,10 +230,31 @@
 
 <!-- GUIDE -->
 <section id="guide" class="screen">
-  <button class="ghost" id="btnGuideBack" style="width:auto;padding:10px 16px;margin-bottom:14px">← 처음으로</button>
-  <div class="card tut" id="guideBody" style="margin-top:0"></div>
-  <div class="dots" id="guideDots"></div>
-  <div class="gnav"><button class="ghost" id="gPrev">이전</button><button class="ghost" id="gNext">다음</button></div>
+  <div id="gGrid">
+    <button class="ghost back" id="btnGuideBack">← 처음으로</button>
+    <div class="ghero"><small>FACE PT GUIDE</small><h1>얼굴 PT 동작 가이드</h1>
+      <p>14가지 동작 · 1세트 약 6분 · 카드를 누르면 움직이는 시범과 상세 설명이 나와요</p></div>
+    <div class="ben">
+      <div>💪 <b>볼·광대 볼륨</b><span class="ev mid">근거: 소규모 연구 1건</span></div>
+      <div>😌 <b>표정 긴장 완화</b><span class="ev mid">미간·턱 · 체감 위주</span></div>
+      <div>🎯 <b>표정 습관 교정</b><span class="ev ok">카메라 실시간 피드백</span></div>
+      <div>💧 <b>붓기 · 혈액순환</b><span class="ev low">근거 약함 · 일시적</span></div>
+    </div>
+        <div class="ggrid" id="ggrid"></div>
+    <div class="card how">
+      <h3>이렇게 하세요</h3>
+      <div class="howrow"><i>1</i><div><b>매일 1세트</b><p>14가지 동작 순서대로 약 6분. 분석 결과에 따라 ★ 표시 동작은 1세트 추가.</p></div></div>
+      <div class="howrow"><i>2</i><div><b>하루 1–2회, 같은 시간대</b><p>아침·저녁 고정하면 습관이 되고, 대칭 기록 비교도 정확해져요.</p></div></div>
+      <div class="howrow"><i>3</i><div><b>기대치는 현실적으로</b><p>2–4주엔 긴장이 풀리는 체감 정도. 연구에서 볼 볼륨 변화는 8주부터 평가됐고 20주에 가장 뚜렷했어요.</p></div></div>
+      <div class="howrow"><i>!</i><div><b>멈춰야 할 때</b><p>턱관절 통증·소리, 목 통증, 눈 시술 직후엔 해당 동작을 건너뛰세요.</p></div></div>
+    </div>
+  </div>
+  <div id="gDetail" style="display:none">
+    <button class="ghost back" id="btnGridBack">← 전체 동작</button>
+    <div class="card tut" id="guideBody" style="margin-top:0"></div>
+    <div class="dots" id="guideDots"></div>
+    <div class="gnav"><button class="ghost" id="gPrev">이전</button><button class="ghost" id="gNext">다음</button></div>
+  </div>
 </section>
 
 
@@ -293,124 +346,287 @@ const R = {
 const avg = (b, l, r) => ((b[l] || 0) + (b[r] || 0)) / 2;
 const lvl = (v, thr) => clamp(v / (thr * settings.sens));
 
+const g = (b, k) => b[k] || 0;
+const A2 = (b, k) => (g(b, k + "Left") + g(b, k + "Right")) / 2;
+const tilt = (p, base) => Math.abs(p.pitch - base.pitch);
+const relaxScore = (b, base) => {
+  const down = A2(b, "browDown"), up = g(b, "browInnerUp");
+  const lim = Math.max(0.1, (base.bs.browDown || 0) * 0.8);
+  return down < lim && up < 0.3 ? 1 : clamp(1 - (down - lim) * 4);
+};
+
+/* 14 exercises. type: hold (keep pose for `hold` s × reps) | timer (counts while face is visible, for hand massage moves) */
 const EX = {
-  smile: {
-    name: "광대 리프트", area: "광대 · 팔자", region: [...R.cheeks, ...R.mouth], type: "hold", hold: 5, reps: 4,
-    desc: "입을 다문 채 입꼬리를 최대한 귀 쪽으로 끌어올리고 버티세요. 광대가 올라가는 느낌.",
-    cue: "입꼬리를 귀 쪽으로 끌어올리고 5초 유지",
-    score: b => lvl(avg(b, "mouthSmileLeft", "mouthSmileRight"), 0.6)
+  eyeOpen: {
+    name: "눈 크게 뜨기", en: "Eye Opener", area: "윗눈꺼풀 · 눈가", type: "hold", hold: 5, reps: 3, region: R.eyes,
+    benefit: "눈을 뜨는 근육(눈둘레근·눈꺼풀올림근)을 의식적으로 쓰는 연습이에요.",
+    desc: "이마는 고정하고 눈만 최대한 크게 떠서 버티세요.", cue: "이마는 그대로, 눈만 크게 뜨고 5초",
+    score: b => lvl(A2(b, "eyeWide"), 0.3) * (g(b, "browInnerUp") > 0.5 ? 0.8 : 1),
+    warn: b => g(b, "browInnerUp") > 0.5 ? "이마 말고 눈만!" : "",
+    steps: ["정면을 보고 어깨 힘을 빼요.", "이마가 움직이지 않게 고정한 채 눈을 최대한 크게 떠요.", "흰자가 위아래로 보이는 느낌으로 5초 유지해요.", "천천히 힘을 풀고 2초 쉬어요."],
+    breath: "뜰 때 코로 들이쉬고, 풀 때 입으로 내쉬어요.",
+    tip: "눈썹이 같이 올라가면 이마 주름 연습이 돼요. 손바닥을 이마에 가볍게 대고 하면 고정하기 쉬워요.",
+    check: "눈 크게 뜨기(eyeWide) 수치 0.3 이상. 이마 올림(browInnerUp)이 크면 감점.",
+    frames: [[{ eye: 1.75, prog: 1 }, 2, "눈만 크게!"]], hl: ["eyes"], rays: "eyes"
   },
-  oface: {
-    name: "O 페이스", area: "볼 · 팔자 · 중안부", region: [...R.cheeks, ...R.mouth], type: "hold", hold: 5, reps: 3,
-    desc: "입을 세로로 길게 'O' 모양으로 벌리고, 윗입술로 앞니를 덮은 채 버티세요.",
-    cue: "입을 오 모양으로 길게 벌리고 유지",
-    score: b => Math.min(lvl(b.jawOpen || 0, 0.35), lvl(b.mouthFunnel || 0, 0.22))
+  softGaze: {
+    name: "부드러운 시선", en: "Soft Gaze", area: "눈가 이완 · 미간", type: "hold", hold: 5, reps: 3, noRelease: true, region: R.eyes,
+    benefit: "화면을 볼 때 습관적으로 찡그리는 눈가 긴장을 푸는 연습이에요.",
+    desc: "먼 곳을 보듯 초점을 풀고 눈가 힘을 빼세요.", cue: "먼 곳을 보듯 눈 힘 빼고 5초",
+    score: b => (A2(b, "eyeSquint") < 0.3 && A2(b, "eyeWide") < 0.25 && A2(b, "eyeBlink") < 0.45) ? 1 : 0.5,
+    warn: b => A2(b, "eyeSquint") >= 0.3 ? "눈 찡그림 풀기" : A2(b, "eyeWide") >= 0.25 ? "너무 크게 떴어요" : "",
+    steps: ["화면 너머 먼 곳을 보듯 시선 초점을 풀어요.", "눈꺼풀·눈밑·미간의 힘을 하나씩 빼요.", "자연스럽게 뜬 상태로 5초, 천천히 한 번 깜빡여요."],
+    breath: "길게 내쉬면서 힘을 빼면 더 잘 풀려요.",
+    tip: "'힘 빼기'도 운동이에요. 오래 화면을 본 날 특히 중요해요.",
+    check: "찡그림·크게 뜨기·감김 수치가 모두 낮을 때 통과.",
+    frames: [[{ eye: 0.85, browDown: 0, prog: 1 }, 2.2, "힘 빼고 멍하니~"]], hl: ["eyes", "brow"]
   },
-  puff: {
-    name: "볼 풍선", area: "볼 · 입가", region: [...R.cheeks], type: "hold", hold: 5, reps: 3,
-    desc: "입에 공기를 가득 넣고 양 볼을 빵빵하게 부풀린 채 버티세요.",
-    cue: "볼에 바람을 넣고 빵빵하게 유지",
-    score: b => Math.max(lvl(b.cheekPuff || 0, 0.3), Math.min(lvl(b.cheekPuff || 0, 0.15), lvl(b.mouthPucker || 0, 0.35)))
+  eyeSqueeze: {
+    name: "눈 꼭 감기", en: "Eye Squeeze", area: "눈가 · 눈밑", type: "hold", hold: 5, reps: 3, region: R.eyes,
+    benefit: "눈 주변 근육을 수축했다 풀어서 눈가 긴장 이완과 근육 사용을 같이 해요.",
+    desc: "눈을 지그시 꼭 감고 5초 버티세요.", cue: "눈을 지그시 꼭 감고 5초",
+    score: b => lvl(A2(b, "eyeBlink"), 0.55),
+    steps: ["눈을 천천히 감아요.", "눈 주변에 힘을 줘 지그시 꼭 감아요. 아랫눈꺼풀이 올라가는 느낌.", "5초 유지 후 천천히 떠요."],
+    breath: "감을 때 들이쉬고, 뜰 때 내쉬어요.",
+    tip: "있는 힘껏 찡그리면 코 주름이 생겨요. 70% 힘으로 '지그시'.",
+    check: "눈 감김(eyeBlink) 0.55 이상. 감는 동안은 소리로 남은 시간을 알려줘요.",
+    frames: [[{ blink: 1, prog: 1 }, 2, "지그시 꼭"]], hl: ["eyes"], rays: "eyes"
   },
-  neck: {
-    name: "목주름 키스", area: "턱선 · 목", region: [...R.jaw, ...R.mouth], type: "hold", hold: 5, reps: 3,
-    desc: "고개를 천장 쪽으로 젖히고 입술을 쭉 내밀어 천장에 뽀뽀하듯 버티세요.",
-    cue: "고개를 들고 천장에 뽀뽀하듯 입술 내밀기",
-    score: (b, p, base) => Math.min(lvl(b.mouthPucker || 0, 0.5), clamp(Math.abs(p.pitch - base.pitch) / 12))
+  jawRelease: {
+    name: "턱 밑 누르기", en: "Jaw Release", area: "턱 밑 · 이중턱", type: "hold", hold: 5, reps: 3, region: R.jaw,
+    benefit: "턱 밑 근육에 저항을 주며 턱을 들어 턱 아래 라인을 쓰는 연습이에요.",
+    desc: "엄지로 턱 밑을 위로 누르며 턱을 살짝 들어 버티세요.", cue: "엄지로 턱 밑을 누르며 턱 살짝 들기",
+    score: (b, p, base) => Math.min(clamp(tilt(p, base) / 6), g(b, "jawOpen") < 0.25 ? 1 : 0.5),
+    warn: b => g(b, "jawOpen") >= 0.25 ? "입은 다물어요" : "",
+    steps: ["양손 엄지를 턱 밑 말랑한 부분에 대요.", "엄지로 위로 지그시 누르면서 턱을 살짝 들어요.", "혀를 입천장에 붙이면 턱 밑이 더 단단해져요.", "5초 유지 후 천천히 내려요."],
+    breath: "누를 때 내쉬고, 내릴 때 들이쉬어요.",
+    tip: "손바닥으로 얼굴을 가리면 인식이 끊겨요. 엄지만 턱 밑에, 나머지 손가락은 아래로.",
+    check: "고개가 기준보다 6° 이상 들리고 입을 다물었을 때 통과. 손 누름 자체는 판정하지 않아요.",
+    frames: [[{ up: 0.45, prog: 1 }, 2, "엄지로 ↑ 누르며 턱 들기"]], hl: ["jaw"], hand: "jawPress",
+    arrows: [[-30, 86, -30, 64], [30, 86, 30, 64]]
   },
-  jaw: {
-    name: "턱 내밀기", area: "이중턱 · 턱선", region: [...R.jaw], type: "hold", hold: 5, reps: 3,
-    desc: "아래턱을 앞으로 쭉 내밀어 아랫니가 윗니보다 앞에 오게 하고 버티세요.",
-    cue: "아래턱을 앞으로 쭉 내밀고 유지",
-    score: b => lvl(b.jawForward || 0, 0.3)
+  jawLift: {
+    name: "턱선 쓸어올리기", en: "Jaw Lift", area: "턱선 · 귀 밑", type: "timer", hold: 2, reps: 5, region: R.jaw,
+    benefit: "턱선을 따라 귀 밑 림프 방향으로 쓸어올리는 마사지예요.",
+    desc: "V자 손가락으로 턱 끝에서 귀 밑까지 쓸어올리세요.", cue: "턱 끝에서 귀 밑까지 쓸어올리기, 2초에 한 번",
+    steps: ["검지·중지로 V자를 만들어 턱뼈를 사이에 끼워요.", "턱 끝에서 귀 밑까지 턱선을 따라 천천히 쓸어올려요.", "2초에 1회, 비프음에 맞춰 5회 반복해요."],
+    breath: "쓸어올릴 때마다 천천히 내쉬어요.",
+    tip: "피부를 끌어당기듯 세게 하지 마세요. 로션이나 크림을 살짝 바르면 마찰이 줄어요.",
+    check: "손 동작은 카메라로 판정하지 않아요. 얼굴이 보이는 동안 2초마다 1회씩 자동으로 세요.",
+    frames: [[{ up: 0.1, prog: 1 }, 2.4, "턱 끝 → 귀 밑"]], hl: ["jaw"], hand: "jawSlide",
+    arrows: [[-14, 70, -50, 38], [14, 70, 50, 38]]
   },
-  eyes: {
-    name: "눈 크게 · 가늘게", area: "눈가 · 눈밑", region: [...R.eyes], type: "alt", reps: 8,
-    desc: "눈을 최대한 크게 떴다가, 아랫눈꺼풀을 올리며 가늘게 찡그리기를 반복하세요.",
-    cue: "눈 크게, 그다음 가늘게. 반복",
-    labelA: "눈 크게!", labelB: "가늘게!",
-    scoreA: b => lvl(avg(b, "eyeWideLeft", "eyeWideRight"), 0.3),
-    scoreB: b => Math.max(lvl(avg(b, "eyeSquintLeft", "eyeSquintRight"), 0.45), lvl(avg(b, "eyeBlinkLeft", "eyeBlinkRight"), 0.55))
+  neckTone: {
+    name: "목·턱선 키스", en: "Neck & Jaw Tone", area: "목 · 턱선", type: "hold", hold: 5, reps: 3, region: [...R.jaw, ...R.mouth],
+    benefit: "고개를 젖힌 채 입술을 내밀어 목 앞쪽(광경근)과 턱 아래를 늘려요.",
+    desc: "고개를 천장 쪽으로 들고 입술을 쭉 내밀어 버티세요.", cue: "고개 들고 천장에 뽀뽀하듯",
+    score: (b, p, base) => Math.min(lvl(g(b, "mouthPucker"), 0.5), clamp(tilt(p, base) / 12)),
+    warn: (b, p, base) => tilt(p, base) < 12 ? "고개를 더 들어요" : g(b, "mouthPucker") < 0.5 ? "입술 더 쭉!" : "",
+    steps: ["어깨를 내리고 등을 곧게 펴요.", "고개를 천장 쪽으로 천천히 젖혀요.", "입술을 쭉 내밀어 천장에 뽀뽀하듯 해요.", "목 앞이 당기는 느낌으로 5초 유지해요."],
+    breath: "젖힌 상태에서 코로 천천히 숨 쉬어요. 숨 참지 않기.",
+    tip: "목 뒤가 아프면 젖히는 각도를 줄이세요. 약 12° 이상이면 인식돼요.",
+    check: "입술 내밀기(mouthPucker) 0.5 이상 + 고개 각도 12° 이상.",
+    frames: [[{ up: 1, pucker: 1, prog: 1 }, 2.2, "고개 ↑ + 쪽"]], hl: ["neck", "jaw"], arrows: [[0, 118, 0, 96]]
   },
-  relax: {
-    name: "미간 풀기", area: "미간 · 이마", region: [...R.brow], type: "hold", hold: 10, reps: 1,
-    desc: "검지로 미간을 가볍게 원을 그리며 문지르면서, 이마와 미간 힘을 완전히 빼세요.",
-    cue: "미간 힘을 빼고 손가락으로 부드럽게 문지르기",
-    score: (b, p, base) => {
-      const down = avg(b, "browDownLeft", "browDownRight"), up = b.browInnerUp || 0;
-      const lim = Math.max(0.1, (base.bs.browDown || 0) * 0.8);
-      return down < lim && up < 0.3 ? 1 : clamp(1 - (down - lim) * 4);
-    }
+  oShape: {
+    name: "작은 O", en: "O Shape", area: "입 둘레", type: "hold", hold: 5, reps: 3, region: R.mouth,
+    benefit: "입 둘레 근육(구륜근)을 오므려 입가 탄력을 쓰는 연습이에요.",
+    desc: "입술을 동그랗게 모아 작은 'O'를 만들고 버티세요.", cue: "입술을 동그랗게 모아 작은 오",
+    score: b => Math.min(lvl(g(b, "mouthFunnel"), 0.3), g(b, "jawOpen") < 0.4 ? 1 : 0.6),
+    warn: b => g(b, "jawOpen") >= 0.4 ? "더 작게, 입술로만" : "",
+    steps: ["입술을 앞으로 모아 동그랗게 만들어요.", "입은 조금만 벌리고 입술 테두리에 힘을 줘요.", "'우~' 소리 내기 직전 모양으로 5초 유지해요."],
+    breath: "코로 자연스럽게 숨 쉬어요.",
+    tip: "롱 O(9번)와 달리 턱은 거의 벌리지 않아요. 입술 힘으로만.",
+    check: "입술 모으기(mouthFunnel) 0.3 이상 + 입 벌림이 작을 것.",
+    frames: [[{ funnel: 1, open: 0.25, prog: 1 }, 2, "작고 동그랗게"]], hl: ["mouth"], rays: "mouth"
+  },
+  cheekInflate: {
+    name: "볼 풍선", en: "Cheek Inflate", area: "볼 · 입가", type: "hold", hold: 5, reps: 3, region: R.cheeks,
+    benefit: "공기 압력으로 볼 안쪽을 늘리고 입을 다무는 힘을 같이 써요.",
+    desc: "볼에 공기를 가득 넣어 빵빵하게 버티세요.", cue: "볼에 바람 가득, 5초",
+    score: b => Math.max(lvl(g(b, "cheekPuff"), 0.3), Math.min(lvl(g(b, "cheekPuff"), 0.15), lvl(g(b, "mouthPucker"), 0.35))),
+    steps: ["코로 숨을 들이마시고 입을 꼭 다물어요.", "입 안에 공기를 가득 채워 양 볼을 부풀려요.", "5초 유지, 여유가 있으면 공기를 좌→우로 옮겨요.", "'후~' 하고 천천히 내뱉어요."],
+    breath: "볼에 공기를 넣는 동안 코로 숨 쉬어요.",
+    tip: "인식 센서가 약한 동작이에요. 안 잡히면 홈 화면에서 민감도를 낮추세요.",
+    check: "볼 부풀림(cheekPuff) 0.3 이상. 약하게 잡힐 땐 입술 모양을 보조 신호로 써요.",
+    frames: [[{ puff: 1, pucker: 0.3, prog: 1 }, 2, "볼 빵빵"]], hl: ["cheeks"], rays: "cheeks"
+  },
+  longO: {
+    name: "롱 O", en: "Long O", area: "볼 · 팔자 · 중안부", type: "hold", hold: 5, reps: 3, region: [...R.cheeks, ...R.mouth],
+    benefit: "입을 세로로 길게 벌려 볼과 중안부를 늘리는 대표 동작이에요.",
+    desc: "입을 세로로 길게 O로 벌리고 윗입술로 앞니를 덮으세요.", cue: "입을 세로로 길게 오, 윗입술로 앞니 덮기",
+    score: b => Math.min(lvl(g(b, "jawOpen"), 0.4), lvl(g(b, "mouthFunnel"), 0.2)),
+    warn: b => g(b, "jawOpen") < 0.4 ? "더 길게 벌려요" : g(b, "mouthFunnel") < 0.2 ? "입술을 O로 모아요" : "",
+    steps: ["입을 세로로 길게 벌려요.", "입술을 O자로 모으고 윗입술을 안쪽으로 말아 앞니를 덮어요.", "볼이 아래로 당기는 느낌으로 5초 유지해요."],
+    breath: "코로 천천히 숨 쉬어요.",
+    tip: "이마가 같이 올라가지 않게. 턱관절이 아프면 벌리는 폭을 줄이세요.",
+    check: "입 벌림(jawOpen) 0.4 이상 + 입술 모으기(mouthFunnel) 0.2 이상.",
+    frames: [[{ open: 1, funnel: 1, prog: 1 }, 2, "세로로 길게 O"]], hl: ["cheeks", "mouth"], rays: "cheeks"
+  },
+  cheekSuck: {
+    name: "볼 오므리기", en: "Cheek Suck", area: "볼 · 광대 아래", type: "hold", hold: 5, reps: 3, region: R.cheeks,
+    benefit: "볼을 안으로 빨아들여 '물고기 입'을 만들며 볼 근육(협근)을 써요.",
+    desc: "볼을 안으로 빨아들여 물고기 입을 만들고 버티세요.", cue: "볼을 쏙 빨아들여 물고기 입",
+    score: b => Math.min(lvl(g(b, "mouthPucker"), 0.45), g(b, "jawOpen") < 0.25 ? 1 : 0.6),
+    steps: ["입을 다물고 양 볼을 이 사이로 빨아들여요.", "입술은 물고기처럼 앞으로 살짝 나와요.", "5초 유지, 가능하면 그 상태로 살짝 미소 지어 보세요."],
+    breath: "코로 숨 쉬어요.",
+    tip: "볼 안쪽 살을 깨물지 않게 조심하세요.",
+    check: "볼이 들어간 건 카메라가 직접 못 봐요. 물고기 입술 모양(mouthPucker 0.45 이상)으로 판정해요.",
+    frames: [[{ suck: 1, pucker: 0.7, prog: 1 }, 2, "볼 쏙 · 물고기 입"]], hl: ["cheeks"],
+    arrows: [[-70, 26, -50, 26], [70, 26, 50, 26]]
+  },
+  cheekLift: {
+    name: "광대 올리기", en: "Cheek Lift", area: "광대 · 앞볼", type: "hold", hold: 5, reps: 3, region: R.cheeks,
+    benefit: "입은 다문 채 광대만 눈 쪽으로 끌어올려 앞볼(광대근)을 써요.",
+    desc: "입을 다문 채 살짝 미소 지으며 광대를 눈 쪽으로 올리세요.", cue: "입 다물고 광대만 눈 쪽으로",
+    score: b => Math.max(lvl(A2(b, "cheekSquint"), 0.3), lvl(A2(b, "mouthSmile"), 0.45)) * (g(b, "jawOpen") > 0.2 ? 0.7 : 1),
+    warn: b => g(b, "jawOpen") > 0.2 ? "입은 다물어요" : "",
+    steps: ["입술을 가볍게 다물어요.", "살짝 미소 지으며 광대를 눈 밑까지 끌어올려요.", "눈은 찡그리지 말고 5초 유지해요."],
+    breath: "올릴 때 들이쉬고, 내릴 때 내쉬어요.",
+    tip: "검지를 광대 위에 대고 올라가는 걸 느끼면 더 정확해요. 눈가 주름이 생길 만큼 찡그리진 마세요.",
+    check: "광대 올림(cheekSquint 0.3) 또는 입 다문 미소(mouthSmile 0.45). 입이 벌어지면 감점.",
+    frames: [[{ smile: 0.5, cheekUp: 1, prog: 1 }, 2, "광대 ↑ 눈 쪽으로"]], hl: ["cheeks"],
+    arrows: [[-38, 40, -38, 16], [38, 40, 38, 16]]
+  },
+  forehead: {
+    name: "이마 마사지", en: "Forehead Smooth", area: "이마 · 미간", type: "hold", hold: 10, reps: 1, noRelease: true, region: R.brow,
+    benefit: "이마와 미간의 습관적 긴장을 푸는 마사지예요.",
+    desc: "손끝으로 이마에 작은 원을 그리며 미간 힘을 빼세요.", cue: "손끝으로 이마에 원 그리기, 미간 힘 빼기",
+    score: (b, p, base) => relaxScore(b, base),
+    warn: b => A2(b, "browDown") > 0.15 ? "미간 힘 빼기" : g(b, "browInnerUp") > 0.3 ? "눈썹 내리기" : "",
+    steps: ["양손 검지·중지 끝을 이마 가운데에 올려요.", "작은 원을 그리며 바깥쪽 관자놀이까지 천천히 이동해요.", "그동안 눈썹과 미간 힘을 완전히 빼요. 10초."],
+    breath: "길게 내쉬며 이마 힘을 '녹인다'는 느낌으로.",
+    tip: "피부를 당기거나 세게 누르지 마세요. 가볍게, 천천히.",
+    check: "미간 찌푸림(browDown)과 눈썹 올림이 모두 낮은 상태로 10초.",
+    frames: [[{ browDown: 0, prog: 1 }, 3, "원을 그리며 부드럽게"]], hl: ["forehead"], hand: "forehead"
+  },
+  lipPout: {
+    name: "입술 쭉", en: "Lip Pout", area: "입술 · 입가", type: "hold", hold: 5, reps: 3, region: R.mouth,
+    benefit: "입술을 최대한 앞으로 내밀어 입가와 인중 주변을 써요.",
+    desc: "뽀뽀하듯 입술을 최대한 앞으로 내밀고 버티세요.", cue: "뽀뽀하듯 입술 쭉",
+    score: b => lvl(g(b, "mouthPucker"), 0.5),
+    steps: ["입을 다물고 입술을 모아요.", "뽀뽀하듯 최대한 앞으로 쭉 내밀어요.", "5초 유지, 여유가 되면 입술을 좌우로 천천히 움직여요."],
+    breath: "코로 자연스럽게 숨 쉬어요.",
+    tip: "작은 O(7번)는 동그랗게 '여는' 모양, 입술 쭉은 앞으로 '내미는' 모양이에요.",
+    check: "입술 내밀기(mouthPucker) 0.5 이상.",
+    frames: [[{ pucker: 1, prog: 1 }, 2, "뽀뽀 ~ 쭉"]], hl: ["mouth"], rays: "mouth"
+  },
+  fullSmile: {
+    name: "활짝 웃기", en: "Full Smile", area: "광대 · 입꼬리", type: "hold", hold: 5, reps: 3, region: [...R.cheeks, ...R.mouth],
+    benefit: "입꼬리와 광대를 최대로 올려 웃는 근육 전체를 써요. 좌우 대칭도 측정해요.",
+    desc: "이가 보이게 활짝 웃으며 광대를 끝까지 올리세요.", cue: "이가 보이게 활짝, 광대 끝까지",
+    score: b => lvl(A2(b, "mouthSmile"), 0.7),
+    warn: b => { const L = g(b, "mouthSmileLeft"), Rr = g(b, "mouthSmileRight"); return Math.abs(L - Rr) > 0.15 ? "좌우 균형 맞추기" : ""; },
+    steps: ["입꼬리를 귀 쪽 대각선 위로 끌어올려요.", "윗니가 보이게 활짝 웃어요.", "광대가 올라간 느낌으로 5초 유지해요.", "천천히 풀고 얼굴을 가볍게 털어요."],
+    breath: "웃으면서 코로 들이쉬고, 풀며 내쉬어요.",
+    tip: "한쪽만 올라가면 화면에 '좌우 균형 맞추기'가 떠요. 약한 쪽을 의식해서 올려 보세요.",
+    check: "미소(mouthSmile) 0.7 이상. 유지하는 동안 좌우 대칭(%)을 기록해요.",
+    frames: [[{ smile: 1, open: 0.2, teeth: 1, cheekUp: 0.6, prog: 1 }, 2, "활짝!"]], hl: ["cheeks", "mouth"], rays: "cheeks"
   }
 };
+const ORDER = Object.keys(EX);
+let focus = new Set();
+const repsOf = k => EX[k].reps + (focus.has(k) && EX[k].type === "hold" && EX[k].reps > 1 ? 1 : 0);
+const chipOf = k => { const e = EX[k], r = repsOf(k); return e.type === "timer" ? `${r}회 (${e.hold}초씩)` : r > 1 ? `${e.hold}초 × ${r}` : `${e.hold}초`; };
 
-/* ---------- tutorials ---------- */
-// Demo face params: smile, open, funnel, pucker, puff, up (head tilt), jaw, browDown, browUp, eye (1=normal), finger
-const N0 = { smile: 0, open: 0, funnel: 0, pucker: 0, puff: 0, up: 0, jaw: 0, browDown: 0.35, browUp: 0, eye: 1, finger: 0 };
-const HL = { cheeks: [[-40, 22, 16], [40, 22, 16]], mouth: [[0, 42, 18]], jaw: [[0, 78, 18], [-44, 58, 12], [44, 58, 12]],
-  eyes: [[-28, -12, 15], [28, -12, 15]], brow: [[0, -36, 14]], neck: [[0, 104, 16]] };
-const TUT = {
-  smile: { hl: [...HL.cheeks, ...HL.mouth], frames: [[N0, 0.8], [{ ...N0, smile: 1, browDown: 0 }, 2, "입꼬리 ↑ 광대 ↑"]],
-    steps: ["입술을 가볍게 다물어요. 이는 보이지 않게.", "입꼬리를 귀 쪽 대각선 위로 천천히 끌어올려요.", "광대가 올라간 상태로 5초 버티고, 천천히 풀어요."],
-    tip: "눈까지 같이 찡그리면 눈가 주름이 생길 수 있어요. 눈은 편하게 뜨고 입가로만 웃으세요." },
-  oface: { hl: [...HL.cheeks, ...HL.mouth], frames: [[N0, 0.8], [{ ...N0, open: 1, funnel: 1, browDown: 0.2 }, 2, "세로로 길게 O"]],
-    steps: ["입을 세로로 길게 벌려 'O' 모양을 만들어요.", "윗입술을 안쪽으로 말아 앞니를 덮어요.", "볼 근육이 당기는 느낌으로 5초 유지해요."],
-    tip: "이마를 치켜올리지 마세요. 힘은 볼과 입 주변에만." },
-  puff: { hl: [...HL.cheeks], frames: [[N0, 0.8], [{ ...N0, puff: 1, pucker: 0.4 }, 2, "볼 빵빵"]],
-    steps: ["코로 숨을 들이마시고 입을 다물어요.", "입 안에 공기를 가득 채워 양 볼을 부풀려요.", "5초 버틴 뒤 '후~' 하고 내뱉어요."],
-    tip: "인식이 잘 안 되면 홈 화면에서 민감도를 낮추세요. 이 동작은 센서가 약하게 읽어요." },
-  neck: { hl: [...HL.jaw, ...HL.neck, ...HL.mouth], frames: [[N0, 0.8], [{ ...N0, up: 1, pucker: 1 }, 2.2, "고개 ↑ + 쪽"]],
-    steps: ["어깨는 내리고 등을 곧게 펴요.", "고개를 천장 쪽으로 천천히 젖혀요.", "입술을 쭉 내밀어 천장에 뽀뽀하듯 5초 유지해요."],
-    tip: "목 뒤가 아프면 젖히는 각도를 줄이세요. 각도는 약 12° 이상이면 인식돼요." },
-  jaw: { hl: [...HL.jaw], frames: [[N0, 0.8], [{ ...N0, jaw: 1, up: 0.3 }, 2, "아래턱 앞으로 →"]],
-    steps: ["입을 살짝 다문 상태에서 시작해요.", "아랫니가 윗니보다 앞에 오도록 아래턱을 앞으로 내밀어요.", "턱 밑이 당기는 느낌으로 5초 유지해요."],
-    tip: "턱관절에서 소리가 나거나 아프면 바로 멈추고 이 동작은 건너뛰세요." },
-  eyes: { hl: [...HL.eyes], frames: [[N0, 0.5], [{ ...N0, eye: 1.7, browDown: 0, browUp: 0.3 }, 1, "크게!"], [{ ...N0, eye: 0.25, browDown: 0.3 }, 1, "가늘게!"]],
-    steps: ["눈을 최대한 크게 떠요.", "아랫눈꺼풀을 위로 올리듯 눈을 가늘게 찡그려요.", "크게 → 가늘게를 1회로, 8회 반복해요."],
-    tip: "눈썹·이마로 하지 말고 눈꺼풀 근육만 쓰세요. 렌즈를 꼈다면 무리하지 마세요." },
-  relax: { hl: [...HL.brow], frames: [[{ ...N0, browDown: 0, finger: 1 }, 3, "미간 힘 빼고 문지르기"]],
-    steps: ["검지를 미간에 가볍게 올려요.", "작은 원을 그리며 부드럽게 문질러요.", "눈썹과 이마 힘을 완전히 빼고 10초 유지해요."],
-    tip: "세게 누르거나 피부를 당기지 마세요. 가볍게, 천천히." }
-};
+/* ---------- illustrated demo character ---------- */
+const N0 = { smile: 0, open: 0, funnel: 0, pucker: 0, puff: 0, suck: 0, up: 0, browDown: 0.3, browUp: 0, eye: 1, blink: 0, cheekUp: 0, teeth: 0, prog: 0 };
+const SPOTS = { eyes: [[-24, -10, 14], [24, -10, 14]], cheeks: [[-36, 20, 15], [36, 20, 15]], mouth: [[0, 40, 16]],
+  jaw: [[0, 66, 14], [-40, 48, 11], [40, 48, 11]], neck: [[0, 100, 13]], brow: [[0, -30, 12]], forehead: [[0, -46, 18]] };
 
-function faceSVG(p, hl, t) {
-  const up = p.up, fy = -up * 10, sy = 1 - up * 0.07;
-  const rx = 64 + p.puff * 9, by = -34 + p.browDown * 5 - p.browUp * 8;
-  const pulse = 0.22 + 0.14 * Math.sin(t * 5);
+function rays(cx, cy, side, op) {
+  return [-35, 0, 35].map(a => {
+    const r = a * Math.PI / 180, dx = Math.cos(r) * side, dy = Math.sin(r);
+    return `<line x1="${cx + dx * 9}" y1="${cy + dy * 9}" x2="${cx + dx * 18}" y2="${cy + dy * 18}" stroke="#ffc93c" stroke-width="3.2" stroke-linecap="round" opacity="${op}"/>`;
+  }).join("");
+}
+function finger(x, y, rot, len = 12) {
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-5" y="-${len}" width="10" height="${len * 2}" rx="5" fill="#fcd9c4" stroke="#e2a98c" stroke-width="1.5"/></g>`;
+}
+function hands(type, t, prog) {
+  if (type === "jawPress") {
+    const y = 82 - prog * 6;
+    return [-1, 1].map(s => `<path d="M${s * 18} ${y + 8} Q${s * 30} ${y + 30} ${s * 34} 132 L${s * 62} 132 Q${s * 56} ${y + 20} ${s * 34} ${y + 6} Z" fill="#fcd9c4" stroke="#e2a98c" stroke-width="1.5"/>` +
+      finger(s * 22, y, s * -15, 10)).join("");
+  }
+  if (type === "jawSlide") {
+    const u = (t * 0.5) % 1, e = u < 0.75 ? u / 0.75 : 1 - (u - 0.75) / 0.25;
+    return [-1, 1].map(s => {
+      const x = s * (12 + e * 40), y = 70 - e * 32, rot = s * (-30 - e * 25);
+      return `<g opacity="0.95">${finger(x - s * 4, y + 6, rot, 11)}${finger(x + s * 4, y - 4, rot, 11)}</g>`;
+    }).join("");
+  }
+  if (type === "forehead") {
+    const a = t * 3;
+    return [-1, 1].map(s => {
+      const x = s * (16 + Math.cos(a) * 5 + ((t * 0.4) % 1) * 14), y = -36 + Math.sin(a) * 4;
+      return `${finger(x - s * 5, y, s * 8, 10)}${finger(x + s * 6, y + 2, s * 8, 10)}`;
+    }).join("");
+  }
+  return "";
+}
+
+function faceSVG(p, c, t) {
+  const S = "#fcd9c4", S2 = "#f0b898", H = "#5b3a2e", L = "#3b2a28";
+  const up = p.up, fy = -up * 8, sy = 1 - up * 0.09;
+  const rx = 58 + p.puff * 9 - p.suck * 4;
+  const by = -28 + p.browDown * 4 - p.browUp * 7 - p.eye * 0 - (p.eye > 1 ? (p.eye - 1) * 3 : 0);
+  const pulse = 0.16 + 0.1 * Math.sin(t * 5);
+  const glow = (c.hl || []).flatMap(k => SPOTS[k] || []).map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ff7a95" opacity="${pulse}"/>`).join("");
   const eye = x => {
-    const ry = Math.max(0.6, 6.5 * p.eye);
-    return `<ellipse cx="${x}" cy="-12" rx="12" ry="${ry}" fill="#fff"/>` +
-      (ry > 2.5 ? `<circle cx="${x}" cy="-12" r="${Math.min(4.5, ry)}" fill="#2a1f2e"/>` : "") +
-      (p.eye < 0.6 ? `<path d="M${x - 12} -5 Q${x} -2 ${x + 12} -5" stroke="#b88" stroke-width="1.5" fill="none"/>` : "");
+    if (p.blink > 0.5) {
+      const tight = p.blink;
+      return `<path d="M${x - 11} -10 Q${x} ${-10 + 5 * tight} ${x + 11} -10" stroke="${L}" stroke-width="2.8" fill="none" stroke-linecap="round"/>` +
+        (tight > 0.8 ? `<path d="M${x - 12} -4 Q${x} -1 ${x + 12} -4" stroke="${S2}" stroke-width="1.6" fill="none"/>` : "");
+    }
+    const ry = Math.max(0.8, 7 * p.eye);
+    return `<ellipse cx="${x}" cy="-10" rx="10.5" ry="${ry}" fill="#fff"/>` +
+      (ry > 2.5 ? `<circle cx="${x}" cy="-10" r="${Math.min(5.4, ry)}" fill="#4a3226"/><circle cx="${x + 1.8}" cy="-12" r="1.7" fill="#fff"/>` : "") +
+      `<path d="M${x - 12} ${-9 - ry * 0.85} Q${x} ${-10 - ry * 1.4} ${x + 12} ${-9 - ry * 0.85}" stroke="${L}" stroke-width="2.6" fill="none" stroke-linecap="round"/>` +
+      `<line x1="${x + 11 * Math.sign(x)}" y1="${-9 - ry * 0.85}" x2="${x + 15 * Math.sign(x)}" y2="${-12 - ry}" stroke="${L}" stroke-width="2" stroke-linecap="round"/>`;
   };
-  const brow = s => `<path d="M${s * 44} ${by + 3} Q${s * 30} ${by - 5} ${s * 14} ${by + p.browDown * 4 - p.browUp * 3}" stroke="#5a3c3c" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  const w = 38 * (1 + p.smile * 0.35 - p.pucker * 0.55 - p.funnel * 0.4), h = p.open * 26, c = p.smile * 11;
+  const brow = s => `<path d="M${s * 38} ${by + 3} Q${s * 26} ${by - 5} ${s * 11} ${by + p.browDown * 3 - p.browUp * 3}" stroke="#5a3a30" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
+  const w = 32 * (1 + p.smile * 0.45 - p.pucker * 0.55 - p.funnel * 0.45), h = p.open * 24, cv = p.smile * 10, my = 40;
   let mouth;
-  if (h > 2) mouth = `<ellipse cx="0" cy="${42 + h / 3}" rx="${w / 2}" ry="${h / 2 + 2}" fill="#5a1f2a" stroke="#d9707f" stroke-width="3"/>`;
-  else if (p.pucker > 0.2) mouth = `<ellipse cx="0" cy="42" rx="${w / 2}" ry="${5 + p.pucker * 4}" fill="#e07a8a"/><path d="M${-w / 3} 42 H${w / 3}" stroke="#a84a5a" stroke-width="1.5"/>`;
-  else mouth = `<path d="M${-w / 2} ${42 - c * 0.6} Q0 ${42 + c * 1.1} ${w / 2} ${42 - c * 0.6}" stroke="#c45a6a" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  const cheekR = 13 + p.puff * 10 + p.smile * 3, cheekY = 24 - p.smile * 6;
-  const jawX = p.jaw * 0, chinY = 80 + p.jaw * 4;
-  const finger = p.finger ? `<ellipse cx="${Math.cos(t * 3) * 5}" cy="${-36 + Math.sin(t * 3) * 4}" rx="9" ry="13" fill="#f2c2a8" stroke="#d9a088" stroke-width="2"/>` : "";
-  const glow = hl.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ff8fa3" opacity="${pulse}"/>`).join("");
-  const jawArrow = p.jaw > 0.3 ? `<text x="52" y="86" font-size="16" fill="#ffd3a5" opacity="${p.jaw}">➜</text>` : "";
-  const upArrow = up > 0.3 ? `<text x="-8" y="-92" font-size="18" fill="#ffd3a5" opacity="${up}">⬆</text>` : "";
-  return `<svg viewBox="-100 -110 200 230"><g transform="translate(0 ${fy}) scale(1 ${sy})">
-    <rect x="-22" y="70" width="44" height="50" rx="10" fill="#f0b89c"/>
-    <ellipse cx="${jawX}" cy="0" rx="${rx}" ry="82" fill="#f6cbb0"/>
-    <ellipse cx="0" cy="${chinY - 6}" rx="${26 + p.jaw * 2}" ry="10" fill="#f6cbb0"/>
-    <circle cx="-40" cy="${cheekY}" r="${cheekR}" fill="#f4a3a3" opacity="${0.35 + p.puff * 0.3}"/>
-    <circle cx="40" cy="${cheekY}" r="${cheekR}" fill="#f4a3a3" opacity="${0.35 + p.puff * 0.3}"/>
-    ${glow}${brow(-1)}${brow(1)}${eye(-28)}${eye(28)}
-    <path d="M0 -4 Q-6 16 0 20 Q5 20 6 17" stroke="#d79c84" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-    ${mouth}${finger}${jawArrow}</g>${upArrow}</svg>`;
+  if (p.teeth > 0.3) mouth = `<path d="M${-w / 2} ${my - 4} Q0 ${my + 20} ${w / 2} ${my - 4} Q0 ${my} ${-w / 2} ${my - 4}Z" fill="#8a2a3c"/>` +
+    `<path d="M${-w / 2 + 3} ${my - 3} Q0 ${my + 1} ${w / 2 - 3} ${my - 3} Q${w / 4} ${my + 6} 0 ${my + 6} Q${-w / 4} ${my + 6} ${-w / 2 + 3} ${my - 3}Z" fill="#fff"/>` +
+    `<path d="M${-w / 3} ${my + 10} Q0 ${my + 14} ${w / 3} ${my + 10}" stroke="#ff9aa8" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  else if (h > 2) mouth = `<ellipse cx="0" cy="${my + h / 3}" rx="${w / 2}" ry="${h / 2 + 2}" fill="#7a2535" stroke="#e5788a" stroke-width="3"/><ellipse cx="0" cy="${my + h / 3 + h / 4}" rx="${w / 4}" ry="${h / 6 + 1}" fill="#ff8fa0"/>`;
+  else if (p.pucker > 0.2) mouth = `<ellipse cx="0" cy="${my}" rx="${Math.max(6, w / 2)}" ry="${5 + p.pucker * 4}" fill="#ef7f92"/><path d="M${-w / 3} ${my} Q0 ${my - 1.5} ${w / 3} ${my}" stroke="#b8475c" stroke-width="1.5" fill="none"/>`;
+  else mouth = `<path d="M${-w / 2} ${my - cv * 0.6} Q0 ${my + cv * 1.1 + 2} ${w / 2} ${my - cv * 0.6}" stroke="#d45a6e" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
+  const blushY = 22 - p.cheekUp * 7 - p.smile * 3, blushR = 10 + p.puff * 9 - p.suck * 3;
+  const suck = p.suck > 0.2 ? [-1, 1].map(s => `<path d="M${s * 44} 6 Q${s * 33} 24 ${s * 42} 44" stroke="${S2}" stroke-width="3" fill="none" stroke-linecap="round" opacity="${p.suck}"/>`).join("") : "";
+  const R_ = c.rays === "eyes" ? rays(-50, -12, -1, p.prog) + rays(50, -12, 1, p.prog)
+    : c.rays === "cheeks" ? rays(-rx + 2, 24, -1, p.prog) + rays(rx - 2, 24, 1, p.prog)
+    : c.rays === "mouth" ? rays(-16, 44, -1, p.prog * 0.9) + rays(16, 44, 1, p.prog * 0.9) : "";
+  const arrows = (c.arrows || []).map(([x1, y1, x2, y2]) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ff3d77" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ah)" opacity="${p.prog}"/>`).join("");
+  const neckLines = up > 0.5 ? `<path d="M-9 74 Q0 77 9 74 M-11 84 Q0 87 11 84" stroke="${S2}" stroke-width="2" fill="none" opacity="${up}"/>` : "";
+  return `<svg viewBox="-110 -132 220 264" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#ff3d77"/></marker></defs>
+  <path d="M-100 132 Q-96 96 -42 90 L42 90 Q96 96 100 132Z" fill="#c9b3e6"/><path d="M-26 90 Q0 104 26 90" stroke="#b49ad6" stroke-width="3" fill="none"/>
+  <g transform="translate(0 ${fy})">
+    <rect x="-18" y="40" width="36" height="58" rx="8" fill="${S2}"/>${neckLines}
+    <g transform="scale(1 ${sy})">
+      <circle cx="0" cy="-92" r="22" fill="${H}"/><ellipse cx="0" cy="-10" rx="${rx + 8}" ry="78" fill="${H}"/>
+      <ellipse cx="${-rx - 1}" cy="-2" rx="7" ry="12" fill="${S2}"/><ellipse cx="${rx + 1}" cy="-2" rx="7" ry="12" fill="${S2}"/>
+      <ellipse cx="0" cy="0" rx="${rx}" ry="72" fill="${S}"/>
+      <path d="M${-rx - 4} -18 Q${-rx} -80 0 -82 Q${rx} -80 ${rx + 4} -18 Q${rx * 0.7} -56 ${rx * 0.15} -54 Q0 -62 ${-rx * 0.15} -54 Q${-rx * 0.7} -56 ${-rx - 4} -18Z" fill="${H}"/>
+      <path d="M${-rx + 2} -46 Q0 -84 ${rx - 2} -46" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/>
+      ${glow}
+      <ellipse cx="-36" cy="${blushY}" rx="${blushR + 2}" ry="${blushR * 0.7}" fill="#ff9aa8" opacity="0.45"/><ellipse cx="36" cy="${blushY}" rx="${blushR + 2}" ry="${blushR * 0.7}" fill="#ff9aa8" opacity="0.45"/>
+      ${suck}${brow(-1)}${brow(1)}${eye(-24)}${eye(24)}
+      <path d="M-2 4 Q-5 16 0 18 Q4 18 5 16" stroke="${S2}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      ${mouth}${R_}${arrows}
+    </g>
+    ${hands(c.hand, t, p.prog)}
+  </g></svg>`;
 }
 
 class Demo {
   constructor(el, lbl, k) {
-    this.el = el; this.lbl = lbl; this.tut = TUT[k]; this.t0 = performance.now(); this.alive = true;
-    const fr = this.tut.frames;
-    this.seq = fr.length === 1 ? fr : fr.length === 2 ? [fr[0], fr[1], [fr[0][0], 0.6]] : fr; // neutral → target → back
+    this.el = el; this.lbl = lbl; this.c = EX[k]; this.t0 = performance.now(); this.alive = true;
+    const fr = this.c.frames.map(([o, d, l]) => [{ ...N0, ...o }, d, l]);
+    this.seq = fr.length === 1 ? [[N0, 0.9, "준비"], fr[0], [N0, 0.6, ""]] : fr;
     this.total = this.seq.reduce((a, f) => a + f[1], 0);
     this.tick();
   }
@@ -422,36 +638,45 @@ class Demo {
     const cur = this.seq[i][0], prev = this.seq[(i - 1 + this.seq.length) % this.seq.length][0];
     const k = clamp((tt - acc) / 0.45), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
     const p = {}; for (const key in N0) p[key] = prev[key] + (cur[key] - prev[key]) * e;
-    this.el.innerHTML = faceSVG(p, this.tut.hl, t);
-    if (this.lbl) this.lbl.textContent = this.seq[i][2] || (i === 0 && this.seq.length > 1 ? "준비" : "");
+    this.el.innerHTML = faceSVG(p, this.c, t);
+    if (this.lbl) this.lbl.textContent = this.seq[i][2] || "";
     requestAnimationFrame(() => this.tick());
   }
   stop() { this.alive = false; }
 }
+const staticFace = k => faceSVG({ ...N0, ...EX[k].frames[0][0] }, EX[k], 0.4);
 
 let demo = null;
 function renderTut(container, k, sub) {
-  const e = EX[k], T = TUT[k];
+  const e = EX[k], n = ORDER.indexOf(k) + 1;
   if (demo) demo.stop();
-  container.innerHTML = `<div class="tut"><div class="head"><h2>${e.name}</h2><span>${sub || ""}</span></div>
-    <div class="tmeta"><span>타겟 · ${e.area}</span><span>${e.type === "alt" ? e.reps + "회 반복" : e.hold + "초 유지 × " + e.reps + "세트"}</span></div>
+  container.innerHTML = `<div class="tut"><div class="head"><div style="display:flex;gap:10px;align-items:center"><span class="no">${n}</span><div><h2>${e.name}</h2><small>${e.en}</small></div></div><span>${sub || ""}</span></div>
+    <div class="tmeta"><span>🎯 ${e.area}</span><span>⏱ ${chipOf(k)}</span>${focus.has(k) ? `<span class="focus">★ 집중 +1세트</span>` : ""}</div>
     <div class="demo"></div><div class="demolbl"></div>
-    <ol class="tsteps">${T.steps.map(s => `<li>${s}</li>`).join("")}</ol>
-    <div class="tip">⚠️ ${T.tip}</div></div>`;
+    <p class="benefit">${e.benefit}</p>
+    <ol class="tsteps">${e.steps.map(s => `<li>${s}</li>`).join("")}</ol>
+    <div class="trow">🌬️ <b>호흡</b> ${e.breath}</div>
+    <div class="tip">⚠️ <b>흔한 실수</b> ${e.tip}</div>
+    <div class="trow cam">📷 <b>카메라 판정</b> ${e.check}</div></div>`;
   demo = new Demo(container.querySelector(".demo"), container.querySelector(".demolbl"), k);
 }
 
 /* guide (no camera) */
-const GUIDE = ["smile", "oface", "puff", "neck", "jaw", "eyes", "relax"];
 let gi = 0;
-function showGuide(i) {
-  gi = (i + GUIDE.length) % GUIDE.length;
-  renderTut($("guideBody"), GUIDE[gi], `${gi + 1} / ${GUIDE.length}`);
-  $("guideDots").innerHTML = GUIDE.map((_, j) => `<i class="${j === gi ? "on" : ""}"></i>`).join("");
-  $("gNext").textContent = gi === GUIDE.length - 1 ? "처음 동작으로" : "다음";
+function buildGrid() {
+  $("ggrid").innerHTML = ORDER.map((k, i) => `<button class="gcard" data-i="${i}"><span class="no">${i + 1}</span>${staticFace(k)}<b>${EX[k].name}</b><small>${EX[k].en}</small><span class="chip">⏱ ${chipOf(k)}</span></button>`).join("");
+  $("ggrid").querySelectorAll(".gcard").forEach(b => b.onclick = () => showGuide(+b.dataset.i));
 }
-$("btnGuide").onclick = () => { show("guide"); showGuide(0); window.scrollTo(0, 0); };
+function showGuide(i) {
+  gi = (i + ORDER.length) % ORDER.length;
+  $("gGrid").style.display = "none"; $("gDetail").style.display = "block"; window.scrollTo(0, 0);
+  renderTut($("guideBody"), ORDER[gi], `${gi + 1} / ${ORDER.length}`);
+  $("guideDots").innerHTML = ORDER.map((_, j) => `<i class="${j === gi ? "on" : ""}"></i>`).join("");
+}
+function showGrid() { if (demo) demo.stop(); $("gDetail").style.display = "none"; $("gGrid").style.display = "block"; }
+$("btnGuide").onclick = () => { show("guide"); buildGrid(); showGrid(); window.scrollTo(0, 0); };
 $("btnGuideBack").onclick = () => { if (demo) demo.stop(); show("home"); };
+$("btnGridBack").onclick = showGrid;
 $("gPrev").onclick = () => showGuide(gi - 1);
 $("gNext").onclick = () => showGuide(gi + 1);
 $("swTut").onclick = () => { settings.tutAlways = !settings.tutAlways; store.set("fpt_settings", settings); $("swTut").classList.toggle("on", !!settings.tutAlways); };
@@ -660,22 +885,19 @@ function analyze() {
   };
   base = { bs: b, pitch: mean("_p"), yaw: mean("_y") };
 
-  const F = [], pri = [];
-  if (b.browDown > 0.15) { F.push(["w", "미간에 힘이 들어가 있어요", "무표정에서도 눈썹이 내려가 있어요. 미간 주름의 대표 원인이라 '미간 풀기'를 앞쪽에 배치했어요."]); pri.push("relax"); }
+  const F = []; focus = new Set();
+  if (b.browDown > 0.15) { F.push(["w", "미간에 힘이 들어가 있어요", "무표정에서도 눈썹이 내려가 있어요. 미간 주름의 대표 원인이라 '이마 마사지'에 집중해요."]); focus.add("forehead"); }
   else F.push(["", "미간 긴장 낮음", "무표정 시 미간이 잘 풀려 있어요."]);
-  if (b.frown > 0.08 || b.press > 0.2) { F.push(["w", "입꼬리가 아래로 · 입술을 다무는 습관", "입가를 끌어내리는 힘이 감지됐어요. 광대 리프트와 O 페이스를 우선 배치했어요."]); pri.push("smile", "oface"); }
+  if (b.frown > 0.08 || b.press > 0.2) { F.push(["w", "입꼬리가 아래로 · 입술을 다무는 습관", "입가를 끌어내리는 힘이 감지됐어요. 광대 올리기·롱 O·활짝 웃기에 집중해요."]); ["cheekLift", "longO", "fullSmile"].forEach(k => focus.add(k)); }
   else F.push(["", "입가 긴장 낮음", "입꼬리가 중립 상태예요."]);
-  if (b.squint > 0.25) { F.push(["w", "눈을 찡그리는 경향", "무표정에서도 눈가에 힘이 들어가 있어요. 화면 밝기·시력도 점검해 보세요."]); pri.push("eyes"); }
-  if (base.pitch < -8 || base.pitch > 8) { F.push(["w", "고개가 기울어진 자세", "측정 중 고개가 위·아래로 기울어 있었어요. 거북목 자세는 턱선을 무너뜨리니 목 동작을 우선했어요."]); pri.push("neck", "jaw"); }
-  if (b.smileAsym > 0.06) F.push(["w", "좌우 비대칭 경향", "한쪽 입꼬리에 더 힘이 들어가 있어요. 광대 리프트 때 대칭을 측정할게요."]);
-
-  const all = ["smile", "oface", "puff", "neck", "jaw", "eyes", "relax"];
-  const order = [...new Set([...pri.filter(x => x !== "relax"), ...all.filter(x => x !== "relax")])];
-  routine = [...order, "relax"]; // always finish with relaxation
+  if (b.squint > 0.25) { F.push(["w", "눈을 찡그리는 경향", "무표정에서도 눈가에 힘이 들어가 있어요. '부드러운 시선'에 집중해요. 화면 밝기·시력도 점검해 보세요."]); focus.add("softGaze"); }
+  if (base.pitch < -8 || base.pitch > 8) { F.push(["w", "고개가 기울어진 자세", "측정 중 고개가 위·아래로 기울어 있었어요. 턱 밑 누르기·목 키스에 집중해요."]); ["jawRelease", "neckTone"].forEach(k => focus.add(k)); }
+  if (b.smileAsym > 0.06) F.push(["w", "좌우 비대칭 경향", "한쪽 입꼬리에 더 힘이 들어가 있어요. '활짝 웃기'에서 대칭을 측정할게요."]);
+  routine = ORDER.slice();
 
   $("findings").innerHTML = F.map(([c, t, d]) => `<div class="finding"><div class="dot ${c}"></div><div><b>${t}</b><p>${d}</p></div></div>`).join("");
   $("planList").innerHTML = routine.map((k, i) => {
-    const e = EX[k]; return `<li>${i + 1}. ${e.name}<span>${e.area} · ${e.type === "alt" ? e.reps + "회" : e.hold + "초×" + e.reps}</span></li>`;
+    const e = EX[k]; return `<li>${i + 1}. ${focus.has(k) ? "★ " : ""}${e.name}<span>${e.area} · ${chipOf(k)}</span></li>`;
   }).join("");
   mode = "plan"; setMeter(0, "");
   $("hStep").textContent = "분석 완료"; $("hName").textContent = ""; $("hDesc").textContent = "";
@@ -704,7 +926,7 @@ function startEx() {
     mode = "tutorial";
     renderTut($("tutBody"), routine[idx], `동작 ${idx + 1} / ${routine.length}`);
     $("tutSheet").classList.add("on"); $("tutSheet").scrollTop = 0;
-    say(e.name + ". " + TUT[routine[idx]].steps.join(" "));
+    say(e.name + ". " + e.steps.join(" "));
     return;
   }
   say(e.name + ". " + e.cue);
@@ -717,7 +939,8 @@ $("btnTutGo").onclick = () => {
 function tutLive() {
   if (!faceOk) { $("tutVal").textContent = "얼굴 안 보임"; $("tutFill").style.width = "0%"; return; }
   const e = EX[routine[idx]];
-  const s = e.type === "alt" ? Math.max(e.scoreA(bs), e.scoreB(bs)) : e.score(bs, pose, base);
+  if (e.type === "timer") { $("tutVal").textContent = "손 동작은 판정 안 함 · 얼굴 인식 ✓"; $("tutFill").style.width = "100%"; $("tutMeter").classList.add("met"); return; }
+  const s = e.score(bs, pose, base);
   $("tutFill").style.width = clamp(s) * 100 + "%";
   $("tutMeter").classList.toggle("met", s >= 1);
   $("tutVal").textContent = s >= 1 ? "정확해요 ✓" : Math.round(clamp(s) * 100) + "%";
@@ -736,43 +959,41 @@ function stepEx(dt) {
     return;
   }
 
+  const R_ = repsOf(routine[idx]);
+  if (e.type === "timer") {
+    st.lastScore = 1; st.hold += dt;
+    setMeter(st.hold / e.hold, `${st.rep + 1}번째 · 쓸어올리기`, true);
+    updateRing((st.rep + st.hold / e.hold) / R_);
+    if (st.hold >= e.hold) { st.hold = 0; st.rep++; beep(990, 0.08); say(String(st.rep)); if (st.rep >= R_) { flash(); return finishEx(); } }
+    return;
+  }
   if (e.type === "hold") {
     const s = e.score(bs, pose, base); st.lastScore = s;
     if (st.phase === "work") {
       if (s >= 1) { st.hold += dt; st.lost = 0; }
       else { st.lost += dt; if (st.lost > 0.6) st.hold = Math.max(0, st.hold - dt * 0.5); }
-      if (routine[idx] === "smile" && s >= 1) {
+      if (routine[idx] === "fullSmile" && s >= 1) {
         const L = bs.mouthSmileLeft || 0, Rr = bs.mouthSmileRight || 0;
         symSamples.push(1 - Math.abs(L - Rr) / Math.max(0.01, L + Rr));
       }
-      setMeter(s, s >= 1 ? `유지 ${Math.max(0, e.hold - st.hold).toFixed(1)}초` : "조금 더!", s >= 1);
+      setMeter(s, s >= 1 ? `유지 ${Math.max(0, e.hold - st.hold).toFixed(1)}초` : ((e.warn && e.warn(bs, pose, base)) || "조금 더!"), s >= 1);
       updateRing(st.hold / e.hold);
       if (st.hold >= e.hold) {
         st.rep++; beep(990); flash();
-        if (st.rep >= e.reps) return finishEx();
+        if (st.rep >= R_) return finishEx();
         st.phase = "rest"; st.t = 0; st.hold = 0; say("좋아요. 힘 풀기");
       }
     } else if (st.phase === "rest") {
       setMeter(0, "힘 빼고 쉬기");
       $("meterFill").style.width = (clamp(st.t / 2) * 100) + "%";
-      if (st.t >= 2 && s < 0.6) { st.phase = "work"; st.t = 0; beep(660); say(e.cue); }
+      if (st.t >= 2 && (e.noRelease || s < 0.6)) { st.phase = "work"; st.t = 0; beep(660); say(e.cue); }
     }
-  } else { // alternating
-    const a = e.scoreA(bs), b = e.scoreB(bs);
-    const s = st.seq === 0 ? a : b; st.lastScore = s;
-    setMeter(s, st.seq === 0 ? e.labelA : e.labelB, s >= 1);
-    if (st.seq === 0 && a >= 1) { st.seq = 1; beep(740, 0.06); }
-    else if (st.seq === 1 && b >= 1) {
-      st.seq = 0; st.rep++; beep(990, 0.08);
-      if (st.rep >= e.reps) { flash(); return finishEx(); }
-    }
-    updateRing();
   }
 }
 
 function finishEx() {
   const e = EX[routine[idx]];
-  log.push({ k: routine[idx], reps: st.rep, sec: Math.round((performance.now() - st.start) / 1000), skipped: st.rep < e.reps });
+  log.push({ k: routine[idx], reps: st.rep, sec: Math.round((performance.now() - st.start) / 1000), skipped: st.rep < repsOf(routine[idx]) });
   idx++;
   if (idx >= routine.length) return finishSession();
   st = null; setTimeout(startEx, 900);
@@ -784,7 +1005,7 @@ function finishSession() {
   const total = Math.round((performance.now() - sessionStart) / 1000);
   const sym = symSamples.length ? Math.round(symSamples.reduce((a, b) => a + b, 0) / symSamples.length * 100) : null;
   const done = log.filter(l => !l.skipped).length;
-  const ok = done >= 4, before = calcStats(), prevBadges = new Set(earnedIds(before));
+  const ok = done >= Math.ceil(log.length / 2), before = calcStats(), prevBadges = new Set(earnedIds(before));
   const now = new Date();
   const hist = store.get("fpt_hist", []);
   hist.push({ d: ymd(now), h: now.getHours(), sym, t: total, ok, perfect: done === log.length });
@@ -792,7 +1013,7 @@ function finishSession() {
   refreshHome();
   const after = calcStats(), fresh = BADGES.filter(b => b.need(after) && !prevBadges.has(b.id));
   const streakMsg = !ok
-    ? `<div class="newbadge"><div class="ic">😅</div><div><b>오늘은 기록 X</b><p style="font-size:13px;color:var(--mute)">${done}개만 완료 · 4개 이상 해야 연속 기록에 들어가요</p></div></div>`
+    ? `<div class="newbadge"><div class="ic">😅</div><div><b>오늘은 기록 X</b><p style="font-size:13px;color:var(--mute)">${done}개만 완료 · ${Math.ceil(log.length / 2)}개 이상 해야 연속 기록에 들어가요</p></div></div>`
     : `<div class="newbadge"><div class="ic">🔥</div><div><b>${after.cur}일 연속!</b><p style="font-size:13px;color:var(--mute)">${before.doneToday ? "오늘 이미 기록됨 · 추가 세션 완료" : "내일 또 오면 " + (after.cur + 1) + "일"}</p></div></div>`;
   const badgeMsg = fresh.map(b => `<div class="newbadge"><div class="ic">${b.ic}</div><div><b>새 배지 · ${b.name}</b></div></div>`).join("");
   $("doneBadges").innerHTML = streakMsg + badgeMsg;
@@ -817,10 +1038,10 @@ function setMeter(v, label = "", met = false) {
 }
 function updateRing(frac) {
   const e = EX[routine[idx]]; if (!e || !st) return;
-  const f = e.type === "alt" ? st.rep / e.reps : (frac ?? 0);
+  const f = frac ?? 0;
   $("ringArc").style.strokeDashoffset = 263.9 * (1 - clamp(f));
-  $("rNum").textContent = `${st.rep}/${e.reps}`;
-  $("rLbl").textContent = e.type === "alt" ? "회" : "세트";
+  $("rNum").textContent = `${st.rep}/${repsOf(routine[idx])}`;
+  $("rLbl").textContent = e.type === "timer" ? "회" : "세트";
 }
 let toastTxt = "";
 function toast(t) { if (t === toastTxt) return; toastTxt = t; $("toast").textContent = t; $("toast").classList.toggle("on", !!t); }
