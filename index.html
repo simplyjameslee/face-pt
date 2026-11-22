@@ -390,7 +390,7 @@ const EX = {
     breath: "감을 때 들이쉬고, 뜰 때 내쉬어요.",
     tip: "있는 힘껏 찡그리면 코 주름이 생겨요. 70% 힘으로 '지그시'.",
     check: "눈 감김(eyeBlink) 0.55 이상. 감는 동안은 소리로 남은 시간을 알려줘요.",
-    frames: [[{ blink: 1, prog: 1 }, 2, "지그시 꼭"]], hl: ["eyes"], rays: "eyes"
+    frames: [[{ blink: 1, prog: 1 }, 2, "지그시 꼭"]], hl: ["eyes"], rays: "eyes", squeeze: true
   },
   jawRelease: {
     name: "턱 밑 누르기", en: "Jaw Release", area: "턱 밑 · 이중턱", type: "hold", hold: 5, reps: 3, region: R.jaw,
@@ -414,7 +414,7 @@ const EX = {
     tip: "피부를 끌어당기듯 세게 하지 마세요. 로션이나 크림을 살짝 바르면 마찰이 줄어요.",
     check: "손 동작은 카메라로 판정하지 않아요. 얼굴이 보이는 동안 2초마다 1회씩 자동으로 세요.",
     frames: [[{ up: 0.1, prog: 1 }, 2.4, "턱 끝 → 귀 밑"]], hl: ["jaw"], hand: "jawSlide",
-    arrows: [[-14, 70, -50, 38], [14, 70, 50, 38]]
+    arrows: [[-12, 68, -46, 34], [12, 68, 46, 34]]
   },
   neckTone: {
     name: "목·턱선 키스", en: "Neck & Jaw Tone", area: "목 · 턱선", type: "hold", hold: 5, reps: 3, region: [...R.jaw, ...R.mouth],
@@ -473,7 +473,7 @@ const EX = {
     tip: "볼 안쪽 살을 깨물지 않게 조심하세요.",
     check: "볼이 들어간 건 카메라가 직접 못 봐요. 물고기 입술 모양(mouthPucker 0.45 이상)으로 판정해요.",
     frames: [[{ suck: 1, pucker: 0.7, prog: 1 }, 2, "볼 쏙 · 물고기 입"]], hl: ["cheeks"],
-    arrows: [[-70, 26, -50, 26], [70, 26, 50, 26]]
+    arrows: [[-68, 24, -48, 24], [68, 24, 48, 24]]
   },
   cheekLift: {
     name: "광대 올리기", en: "Cheek Lift", area: "광대 · 앞볼", type: "hold", hold: 5, reps: 3, region: R.cheeks,
@@ -486,7 +486,7 @@ const EX = {
     tip: "검지를 광대 위에 대고 올라가는 걸 느끼면 더 정확해요. 눈가 주름이 생길 만큼 찡그리진 마세요.",
     check: "광대 올림(cheekSquint 0.3) 또는 입 다문 미소(mouthSmile 0.45). 입이 벌어지면 감점.",
     frames: [[{ smile: 0.5, cheekUp: 1, prog: 1 }, 2, "광대 ↑ 눈 쪽으로"]], hl: ["cheeks"],
-    arrows: [[-38, 40, -38, 16], [38, 40, 38, 16]]
+    arrows: [[-34, 36, -34, 12], [34, 36, 34, 12]]
   },
   forehead: {
     name: "이마 마사지", en: "Forehead Smooth", area: "이마 · 미간", type: "hold", hold: 10, reps: 1, noRelease: true, region: R.brow,
@@ -531,8 +531,8 @@ const chipOf = k => { const e = EX[k], r = repsOf(k); return e.type === "timer" 
 
 /* ---------- illustrated demo character ---------- */
 const N0 = { smile: 0, open: 0, funnel: 0, pucker: 0, puff: 0, suck: 0, up: 0, browDown: 0.3, browUp: 0, eye: 1, blink: 0, cheekUp: 0, teeth: 0, prog: 0 };
-const SPOTS = { eyes: [[-24, -10, 14], [24, -10, 14]], cheeks: [[-36, 20, 15], [36, 20, 15]], mouth: [[0, 40, 16]],
-  jaw: [[0, 66, 14], [-40, 48, 11], [40, 48, 11]], neck: [[0, 100, 13]], brow: [[0, -30, 12]], forehead: [[0, -46, 18]] };
+const SPOTS = { eyes: [[-24, -2, 15], [24, -2, 15]], cheeks: [[-34, 20, 14], [34, 20, 14]], mouth: [[0, 38, 13]],
+  jaw: [[0, 62, 13], [-38, 44, 10], [38, 44, 10]], neck: [[0, 98, 13]], brow: [[0, -22, 11]], forehead: [[0, -36, 16]] };
 
 function rays(cx, cy, side, op) {
   return [-35, 0, 35].map(a => {
@@ -541,81 +541,100 @@ function rays(cx, cy, side, op) {
   }).join("");
 }
 function finger(x, y, rot, len = 12) {
-  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-5" y="-${len}" width="10" height="${len * 2}" rx="5" fill="#fcd9c4" stroke="#e2a98c" stroke-width="1.5"/></g>`;
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-5" y="-${len}" width="10" height="${len * 2}" rx="5" fill="#ffe3d3" stroke="#e8a88e" stroke-width="1.5"/></g>`;
 }
 function hands(type, t, prog) {
   if (type === "jawPress") {
-    const y = 82 - prog * 6;
-    return [-1, 1].map(s => `<path d="M${s * 18} ${y + 8} Q${s * 30} ${y + 30} ${s * 34} 132 L${s * 62} 132 Q${s * 56} ${y + 20} ${s * 34} ${y + 6} Z" fill="#fcd9c4" stroke="#e2a98c" stroke-width="1.5"/>` +
-      finger(s * 22, y, s * -15, 10)).join("");
+    const y = 80 - prog * 6;
+    return [-1, 1].map(s => `<path d="M${s * 18} ${y + 8} Q${s * 30} ${y + 30} ${s * 34} 132 L${s * 62} 132 Q${s * 56} ${y + 20} ${s * 34} ${y + 6} Z" fill="#ffe3d3" stroke="#e8a88e" stroke-width="1.5"/>` +
+      finger(s * 20, y, s * -15, 10)).join("");
   }
   if (type === "jawSlide") {
     const u = (t * 0.5) % 1, e = u < 0.75 ? u / 0.75 : 1 - (u - 0.75) / 0.25;
     return [-1, 1].map(s => {
-      const x = s * (12 + e * 40), y = 70 - e * 32, rot = s * (-30 - e * 25);
+      const x = s * (10 + e * 38), y = 68 - e * 34, rot = s * (-30 - e * 25);
       return `<g opacity="0.95">${finger(x - s * 4, y + 6, rot, 11)}${finger(x + s * 4, y - 4, rot, 11)}</g>`;
     }).join("");
   }
   if (type === "forehead") {
     const a = t * 3;
     return [-1, 1].map(s => {
-      const x = s * (16 + Math.cos(a) * 5 + ((t * 0.4) % 1) * 14), y = -36 + Math.sin(a) * 4;
+      const x = s * (14 + Math.cos(a) * 5 + ((t * 0.4) % 1) * 14), y = -34 + Math.sin(a) * 4;
       return `${finger(x - s * 5, y, s * 8, 10)}${finger(x + s * 6, y + 2, s * 8, 10)}`;
     }).join("");
   }
   return "";
 }
 
+/* anime-style original character */
 function faceSVG(p, c, t) {
-  const S = "#fcd9c4", S2 = "#f0b898", H = "#5b3a2e", L = "#3b2a28";
+  const S = "#ffe6d8", S2 = "#f1b8a0", H = "#4b2c3c", H2 = "#6e4458", L = "#2a1a28";
   const up = p.up, fy = -up * 8, sy = 1 - up * 0.09;
-  const rx = 58 + p.puff * 9 - p.suck * 4;
-  const by = -28 + p.browDown * 4 - p.browUp * 7 - p.eye * 0 - (p.eye > 1 ? (p.eye - 1) * 3 : 0);
+  const rx = 54 + p.puff * 8 - p.suck * 4, ey = -2;
+  const by = -22 + p.browDown * 4 - p.browUp * 6 - (p.eye > 1 ? (p.eye - 1) * 5 : 0);
   const pulse = 0.16 + 0.1 * Math.sin(t * 5);
   const glow = (c.hl || []).flatMap(k => SPOTS[k] || []).map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ff7a95" opacity="${pulse}"/>`).join("");
+  const cheekW = p.puff * 10;
+  const face = `<path d="M${-rx} -14 C${-rx - cheekW * 0.3} ${24 + cheekW} ${-26 - cheekW} 60 0 70 C${26 + cheekW} 60 ${rx + cheekW * 0.3} ${24 + cheekW} ${rx} -14 C${rx} -80 ${-rx} -80 ${-rx} -14Z" fill="${S}"/>`;
+
   const eye = x => {
+    const s = Math.sign(x);
     if (p.blink > 0.5) {
-      const tight = p.blink;
-      return `<path d="M${x - 11} -10 Q${x} ${-10 + 5 * tight} ${x + 11} -10" stroke="${L}" stroke-width="2.8" fill="none" stroke-linecap="round"/>` +
-        (tight > 0.8 ? `<path d="M${x - 12} -4 Q${x} -1 ${x + 12} -4" stroke="${S2}" stroke-width="1.6" fill="none"/>` : "");
+      if (c.squeeze && p.blink > 0.85) // > <
+        return `<path d="M${x - s * 9} ${ey - 7} L${x + s * 7} ${ey} L${x - s * 9} ${ey + 7}" stroke="${L}" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      return `<path d="M${x - 12} ${ey + 2} Q${x} ${ey - 7} ${x + 12} ${ey + 2}" stroke="${L}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
     }
-    const ry = Math.max(0.8, 7 * p.eye);
-    return `<ellipse cx="${x}" cy="-10" rx="10.5" ry="${ry}" fill="#fff"/>` +
-      (ry > 2.5 ? `<circle cx="${x}" cy="-10" r="${Math.min(5.4, ry)}" fill="#4a3226"/><circle cx="${x + 1.8}" cy="-12" r="1.7" fill="#fff"/>` : "") +
-      `<path d="M${x - 12} ${-9 - ry * 0.85} Q${x} ${-10 - ry * 1.4} ${x + 12} ${-9 - ry * 0.85}" stroke="${L}" stroke-width="2.6" fill="none" stroke-linecap="round"/>` +
-      `<line x1="${x + 11 * Math.sign(x)}" y1="${-9 - ry * 0.85}" x2="${x + 15 * Math.sign(x)}" y2="${-12 - ry}" stroke="${L}" stroke-width="2" stroke-linecap="round"/>`;
+    const k = p.eye, ry = Math.max(1, 12 * k), iry = Math.min(11, ry * 0.92), irx = Math.min(9, 9 * Math.max(0.6, Math.min(1, k)));
+    const lashY = ey - ry * 0.78;
+    return `<ellipse cx="${x}" cy="${ey}" rx="13.5" ry="${ry}" fill="#fff"/>` +
+      (ry > 3 ? `<ellipse cx="${x - s}" cy="${ey + 1}" rx="${irx}" ry="${iry}" fill="url(#ir)"/>` +
+        `<ellipse cx="${x - s}" cy="${ey + 2}" rx="${irx * 0.45}" ry="${iry * 0.5}" fill="#1c1028"/>` +
+        `<ellipse cx="${x - s - 3.5}" cy="${ey - iry * 0.42}" rx="3.6" ry="4.4" fill="#fff"/>` +
+        `<circle cx="${x - s + 3.6}" cy="${ey + iry * 0.45}" r="1.8" fill="#fff" opacity=".9"/>` : "") +
+      `<path d="M${x - 15} ${lashY + 4} Q${x - 2} ${lashY - 6} ${x + 15} ${lashY + 3}" stroke="${L}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
+      `<path d="M${x + s * 13} ${lashY + 2} L${x + s * 20} ${lashY - 3}" stroke="${L}" stroke-width="3" stroke-linecap="round"/>` +
+      `<path d="M${x - 7} ${ey + ry * 0.98} Q${x} ${ey + ry * 1.08} ${x + 7} ${ey + ry * 0.98}" stroke="${L}" stroke-width="1.3" fill="none" opacity=".5"/>`;
   };
-  const brow = s => `<path d="M${s * 38} ${by + 3} Q${s * 26} ${by - 5} ${s * 11} ${by + p.browDown * 3 - p.browUp * 3}" stroke="#5a3a30" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
-  const w = 32 * (1 + p.smile * 0.45 - p.pucker * 0.55 - p.funnel * 0.45), h = p.open * 24, cv = p.smile * 10, my = 40;
+  const brow = s => `<path d="M${s * 32} ${by + 2} Q${s * 21} ${by - 4} ${s * 9} ${by + p.browDown * 3 - p.browUp * 2}" stroke="${H2}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+
+  const w = 22 * (1 + p.smile * 0.7 - p.pucker * 0.45 - p.funnel * 0.35), h = p.open * 20, cv = p.smile * 7, my = 36;
   let mouth;
-  if (p.teeth > 0.3) mouth = `<path d="M${-w / 2} ${my - 4} Q0 ${my + 20} ${w / 2} ${my - 4} Q0 ${my} ${-w / 2} ${my - 4}Z" fill="#8a2a3c"/>` +
-    `<path d="M${-w / 2 + 3} ${my - 3} Q0 ${my + 1} ${w / 2 - 3} ${my - 3} Q${w / 4} ${my + 6} 0 ${my + 6} Q${-w / 4} ${my + 6} ${-w / 2 + 3} ${my - 3}Z" fill="#fff"/>` +
-    `<path d="M${-w / 3} ${my + 10} Q0 ${my + 14} ${w / 3} ${my + 10}" stroke="#ff9aa8" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-  else if (h > 2) mouth = `<ellipse cx="0" cy="${my + h / 3}" rx="${w / 2}" ry="${h / 2 + 2}" fill="#7a2535" stroke="#e5788a" stroke-width="3"/><ellipse cx="0" cy="${my + h / 3 + h / 4}" rx="${w / 4}" ry="${h / 6 + 1}" fill="#ff8fa0"/>`;
-  else if (p.pucker > 0.2) mouth = `<ellipse cx="0" cy="${my}" rx="${Math.max(6, w / 2)}" ry="${5 + p.pucker * 4}" fill="#ef7f92"/><path d="M${-w / 3} ${my} Q0 ${my - 1.5} ${w / 3} ${my}" stroke="#b8475c" stroke-width="1.5" fill="none"/>`;
-  else mouth = `<path d="M${-w / 2} ${my - cv * 0.6} Q0 ${my + cv * 1.1 + 2} ${w / 2} ${my - cv * 0.6}" stroke="#d45a6e" stroke-width="3.6" fill="none" stroke-linecap="round"/>`;
-  const blushY = 22 - p.cheekUp * 7 - p.smile * 3, blushR = 10 + p.puff * 9 - p.suck * 3;
-  const suck = p.suck > 0.2 ? [-1, 1].map(s => `<path d="M${s * 44} 6 Q${s * 33} 24 ${s * 42} 44" stroke="${S2}" stroke-width="3" fill="none" stroke-linecap="round" opacity="${p.suck}"/>`).join("") : "";
-  const R_ = c.rays === "eyes" ? rays(-50, -12, -1, p.prog) + rays(50, -12, 1, p.prog)
-    : c.rays === "cheeks" ? rays(-rx + 2, 24, -1, p.prog) + rays(rx - 2, 24, 1, p.prog)
-    : c.rays === "mouth" ? rays(-16, 44, -1, p.prog * 0.9) + rays(16, 44, 1, p.prog * 0.9) : "";
+  if (p.teeth > 0.3) mouth = `<path d="M${-w / 2} ${my - 3} Q0 ${my + 17} ${w / 2} ${my - 3} Q0 ${my - 1} ${-w / 2} ${my - 3}Z" fill="#a8324a"/>` +
+    `<ellipse cx="0" cy="${my + 7}" rx="${w / 4}" ry="3" fill="#ff8597"/>` +
+    `<path d="M${-w / 2 + 3} ${my - 2} Q0 ${my + 1} ${w / 2 - 3} ${my - 2} L${w / 2 - 5} ${my + 1} Q0 ${my + 3} ${-w / 2 + 5} ${my + 1}Z" fill="#fff"/>`;
+  else if (h > 2) mouth = `<ellipse cx="0" cy="${my + h / 3}" rx="${Math.max(5, w / 2)}" ry="${h / 2 + 2}" fill="#8e2a42"/><ellipse cx="0" cy="${my + h / 3 + h / 4}" rx="${Math.max(3, w / 4)}" ry="${h / 7 + 1.5}" fill="#ff8597"/>`;
+  else if (p.pucker > 0.2) mouth = `<ellipse cx="0" cy="${my}" rx="${Math.max(4.5, w / 2.6)}" ry="${3.5 + p.pucker * 3}" fill="#f37e93"/><path d="M-3 ${my} Q0 ${my - 1} 3 ${my}" stroke="#b8475c" stroke-width="1.2" fill="none"/>`;
+  else mouth = `<path d="M${-w / 2} ${my - cv * 0.5} Q0 ${my + cv + 2} ${w / 2} ${my - cv * 0.5}" stroke="#c94a62" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+
+  const blushY = 18 - p.cheekUp * 6 - p.smile * 3, blushR = 9 + p.puff * 8 - p.suck * 3;
+  const blush = [-1, 1].map(s => {
+    const bx = s * 34;
+    return `<ellipse cx="${bx}" cy="${blushY}" rx="${blushR + 3}" ry="${blushR * 0.6}" fill="#ff8fa3" opacity="0.5"/>` +
+      [-1, 0, 1].map(i => `<path d="M${bx + i * 5 - 2} ${blushY + 2.5} L${bx + i * 5 + 2} ${blushY - 2.5}" stroke="#ff6b88" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>`).join("");
+  }).join("");
+  const suck = p.suck > 0.2 ? [-1, 1].map(s => `<path d="M${s * 42} 6 Q${s * 32} 22 ${s * 38} 40" stroke="${S2}" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="${p.suck}"/>`).join("") : "";
+  const R_ = c.rays === "eyes" ? rays(-46, -4, -1, p.prog) + rays(46, -4, 1, p.prog)
+    : c.rays === "cheeks" ? rays(-rx + 2, 22, -1, p.prog) + rays(rx - 2, 22, 1, p.prog)
+    : c.rays === "mouth" ? rays(-14, 40, -1, p.prog * 0.9) + rays(14, 40, 1, p.prog * 0.9) : "";
   const arrows = (c.arrows || []).map(([x1, y1, x2, y2]) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ff3d77" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ah)" opacity="${p.prog}"/>`).join("");
-  const neckLines = up > 0.5 ? `<path d="M-9 74 Q0 77 9 74 M-11 84 Q0 87 11 84" stroke="${S2}" stroke-width="2" fill="none" opacity="${up}"/>` : "";
+  const neckLines = up > 0.5 ? `<path d="M-8 72 Q0 75 8 72 M-10 82 Q0 85 10 82" stroke="${S2}" stroke-width="2" fill="none" opacity="${up}"/>` : "";
+  const sideLock = s => `<path d="M${s * (rx + 6)} -34 Q${s * (rx + 12)} 14 ${s * (rx - 2)} 52 Q${s * (rx - 4)} 12 ${s * (rx - 6)} -20Z" fill="${H}"/>`;
+  const bangs = `<path d="M${-rx - 6} -10 Q${-rx - 2} -82 0 -84 Q${rx + 2} -82 ${rx + 6} -10 L${rx - 6} -40 L${rx - 14} -30 L${rx * 0.42} -52 L${rx * 0.26} -33 L${rx * 0.08} -54 L${-rx * 0.1} -34 L${-rx * 0.3} -54 L${-rx * 0.44} -32 L${-rx + 14} -46 L${-rx + 6} -28 Z" fill="${H}"/>`;
   return `<svg viewBox="-110 -132 220 264" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#ff3d77"/></marker></defs>
-  <path d="M-100 132 Q-96 96 -42 90 L42 90 Q96 96 100 132Z" fill="#c9b3e6"/><path d="M-26 90 Q0 104 26 90" stroke="#b49ad6" stroke-width="3" fill="none"/>
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#ff3d77"/></marker>
+  <linearGradient id="ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1846"/><stop offset=".55" stop-color="#7a4fb0"/><stop offset="1" stop-color="#d6a6ff"/></linearGradient></defs>
+  <path d="M-100 132 Q-96 96 -42 90 L42 90 Q96 96 100 132Z" fill="#c9b3e6"/><path d="M-22 90 L0 108 L22 90" stroke="#fff" stroke-width="4" fill="none" stroke-linejoin="round"/>
   <g transform="translate(0 ${fy})">
-    <rect x="-18" y="40" width="36" height="58" rx="8" fill="${S2}"/>${neckLines}
+    <rect x="-15" y="40" width="30" height="58" rx="8" fill="${S2}"/>${neckLines}
     <g transform="scale(1 ${sy})">
-      <circle cx="0" cy="-92" r="22" fill="${H}"/><ellipse cx="0" cy="-10" rx="${rx + 8}" ry="78" fill="${H}"/>
-      <ellipse cx="${-rx - 1}" cy="-2" rx="7" ry="12" fill="${S2}"/><ellipse cx="${rx + 1}" cy="-2" rx="7" ry="12" fill="${S2}"/>
-      <ellipse cx="0" cy="0" rx="${rx}" ry="72" fill="${S}"/>
-      <path d="M${-rx - 4} -18 Q${-rx} -80 0 -82 Q${rx} -80 ${rx + 4} -18 Q${rx * 0.7} -56 ${rx * 0.15} -54 Q0 -62 ${-rx * 0.15} -54 Q${-rx * 0.7} -56 ${-rx - 4} -18Z" fill="${H}"/>
-      <path d="M${-rx + 2} -46 Q0 -84 ${rx - 2} -46" stroke="#fff" stroke-width="9" fill="none" stroke-linecap="round"/>
-      ${glow}
-      <ellipse cx="-36" cy="${blushY}" rx="${blushR + 2}" ry="${blushR * 0.7}" fill="#ff9aa8" opacity="0.45"/><ellipse cx="36" cy="${blushY}" rx="${blushR + 2}" ry="${blushR * 0.7}" fill="#ff9aa8" opacity="0.45"/>
-      ${suck}${brow(-1)}${brow(1)}${eye(-24)}${eye(24)}
-      <path d="M-2 4 Q-5 16 0 18 Q4 18 5 16" stroke="${S2}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <circle cx="0" cy="-90" r="21" fill="${H}"/><path d="M-10 -100 Q0 -106 10 -100" stroke="#fff" stroke-opacity=".3" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="0" cy="-12" rx="${rx + 10}" ry="76" fill="${H}"/>
+      ${face}
+      ${bangs}${sideLock(-1)}${sideLock(1)}
+      <path d="M${-rx * 0.5} -70 Q0 -79 ${rx * 0.5} -70" stroke="#fff" stroke-opacity=".28" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path d="M${-rx + 4} -50 Q0 -86 ${rx - 4} -50" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"/>
+      ${glow}${blush}${suck}${brow(-1)}${brow(1)}${eye(-24)}${eye(24)}
+      <path d="M1 14 L-1 17" stroke="${S2}" stroke-width="2.2" stroke-linecap="round"/>
       ${mouth}${R_}${arrows}
     </g>
     ${hands(c.hand, t, p.prog)}
