@@ -531,7 +531,7 @@ const chipOf = k => { const e = EX[k], r = repsOf(k); return e.type === "timer" 
 
 /* ---------- illustrated demo character ---------- */
 const N0 = { smile: 0, open: 0, funnel: 0, pucker: 0, puff: 0, suck: 0, up: 0, browDown: 0.3, browUp: 0, eye: 1, blink: 0, cheekUp: 0, teeth: 0, prog: 0 };
-const SPOTS = { eyes: [[-24, -2, 15], [24, -2, 15]], cheeks: [[-34, 20, 14], [34, 20, 14]], mouth: [[0, 38, 13]],
+const SPOTS = { eyes: [[-22, -4, 14], [22, -4, 14]], cheeks: [[-32, 20, 14], [32, 20, 14]], mouth: [[0, 35, 13]],
   jaw: [[0, 62, 13], [-38, 44, 10], [38, 44, 10]], neck: [[0, 98, 13]], brow: [[0, -22, 11]], forehead: [[0, -36, 16]] };
 
 function rays(cx, cy, side, op) {
@@ -541,12 +541,12 @@ function rays(cx, cy, side, op) {
   }).join("");
 }
 function finger(x, y, rot, len = 12) {
-  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-5" y="-${len}" width="10" height="${len * 2}" rx="5" fill="#ffe3d3" stroke="#e8a88e" stroke-width="1.5"/></g>`;
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><rect x="-5" y="-${len}" width="10" height="${len * 2}" rx="5" fill="#f6d5c3" stroke="#d9987e" stroke-width="1.5"/></g>`;
 }
 function hands(type, t, prog) {
   if (type === "jawPress") {
     const y = 80 - prog * 6;
-    return [-1, 1].map(s => `<path d="M${s * 18} ${y + 8} Q${s * 30} ${y + 30} ${s * 34} 132 L${s * 62} 132 Q${s * 56} ${y + 20} ${s * 34} ${y + 6} Z" fill="#ffe3d3" stroke="#e8a88e" stroke-width="1.5"/>` +
+    return [-1, 1].map(s => `<path d="M${s * 18} ${y + 8} Q${s * 30} ${y + 30} ${s * 34} 132 L${s * 62} 132 Q${s * 56} ${y + 20} ${s * 34} ${y + 6} Z" fill="#f6d5c3" stroke="#d9987e" stroke-width="1.5"/>` +
       finger(s * 20, y, s * -15, 10)).join("");
   }
   if (type === "jawSlide") {
@@ -566,76 +566,88 @@ function hands(type, t, prog) {
   return "";
 }
 
-/* anime-style original character */
+/* neutral, semi-realistic original character (female) */
 function faceSVG(p, c, t) {
-  const S = "#ffe6d8", S2 = "#f1b8a0", H = "#4b2c3c", H2 = "#6e4458", L = "#2a1a28";
+  const S = "#f6d5c3", S2 = "#e3ad94", S3 = "#d9987e", H = "#3f2a24", H2 = "#5a3c32", L = "#3a2622";
   const up = p.up, fy = -up * 8, sy = 1 - up * 0.09;
-  const rx = 54 + p.puff * 8 - p.suck * 4, ey = -2;
-  const by = -22 + p.browDown * 4 - p.browUp * 6 - (p.eye > 1 ? (p.eye - 1) * 5 : 0);
-  const pulse = 0.16 + 0.1 * Math.sin(t * 5);
+  const rx = 52 + p.puff * 8 - p.suck * 3, ey = -4;
+  const by = -21 + p.browDown * 4 - p.browUp * 6 - (p.eye > 1 ? (p.eye - 1) * 5 : 0);
+  const pulse = 0.14 + 0.09 * Math.sin(t * 5);
   const glow = (c.hl || []).flatMap(k => SPOTS[k] || []).map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#ff7a95" opacity="${pulse}"/>`).join("");
-  const cheekW = p.puff * 10;
-  const face = `<path d="M${-rx} -14 C${-rx - cheekW * 0.3} ${24 + cheekW} ${-26 - cheekW} 60 0 70 C${26 + cheekW} 60 ${rx + cheekW * 0.3} ${24 + cheekW} ${rx} -14 C${rx} -80 ${-rx} -80 ${-rx} -14Z" fill="${S}"/>`;
+  const cw = p.puff * 9;
+  const face = `<path d="M${-rx} -18 C${-rx - cw * 0.3} ${26 + cw} ${-36 - cw} 66 0 72 C${36 + cw} 66 ${rx + cw * 0.3} ${26 + cw} ${rx} -18 C${rx} -82 ${-rx} -82 ${-rx} -18Z" fill="${S}"/>`;
 
   const eye = x => {
     const s = Math.sign(x);
     if (p.blink > 0.5) {
-      if (c.squeeze && p.blink > 0.85) // > <
-        return `<path d="M${x - s * 9} ${ey - 7} L${x + s * 7} ${ey} L${x - s * 9} ${ey + 7}" stroke="${L}" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-      return `<path d="M${x - 12} ${ey + 2} Q${x} ${ey - 7} ${x + 12} ${ey + 2}" stroke="${L}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
+      const tight = c.squeeze && p.blink > 0.85;
+      return `<path d="M${x - 11} ${ey} Q${x} ${ey + (tight ? 3 : 4)} ${x + 11} ${ey}" stroke="${L}" stroke-width="2.4" fill="none" stroke-linecap="round"/>` +
+        `<path d="M${x + s * 10} ${ey} L${x + s * 13} ${ey - 2}" stroke="${L}" stroke-width="1.6" stroke-linecap="round"/>` +
+        (tight ? `<path d="M${x - 9} ${ey + 6} Q${x} ${ey + 8} ${x + 9} ${ey + 6} M${x - 8} ${ey - 5} Q${x} ${ey - 7} ${x + 8} ${ey - 5}" stroke="${S3}" stroke-width="1.3" fill="none"/>` : "");
     }
-    const k = p.eye, ry = Math.max(1, 12 * k), iry = Math.min(11, ry * 0.92), irx = Math.min(9, 9 * Math.max(0.6, Math.min(1, k)));
-    const lashY = ey - ry * 0.78;
-    return `<ellipse cx="${x}" cy="${ey}" rx="13.5" ry="${ry}" fill="#fff"/>` +
-      (ry > 3 ? `<ellipse cx="${x - s}" cy="${ey + 1}" rx="${irx}" ry="${iry}" fill="url(#ir)"/>` +
-        `<ellipse cx="${x - s}" cy="${ey + 2}" rx="${irx * 0.45}" ry="${iry * 0.5}" fill="#1c1028"/>` +
-        `<ellipse cx="${x - s - 3.5}" cy="${ey - iry * 0.42}" rx="3.6" ry="4.4" fill="#fff"/>` +
-        `<circle cx="${x - s + 3.6}" cy="${ey + iry * 0.45}" r="1.8" fill="#fff" opacity=".9"/>` : "") +
-      `<path d="M${x - 15} ${lashY + 4} Q${x - 2} ${lashY - 6} ${x + 15} ${lashY + 3}" stroke="${L}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
-      `<path d="M${x + s * 13} ${lashY + 2} L${x + s * 20} ${lashY - 3}" stroke="${L}" stroke-width="3" stroke-linecap="round"/>` +
-      `<path d="M${x - 7} ${ey + ry * 0.98} Q${x} ${ey + ry * 1.08} ${x + 7} ${ey + ry * 0.98}" stroke="${L}" stroke-width="1.3" fill="none" opacity=".5"/>`;
+    const k = p.eye, hgt = Math.max(1, 6.2 * k);
+    const top = ey - hgt, bot = ey + hgt * 0.75;
+    const shape = `M${x - 12} ${ey} Q${x - 4} ${top - 2} ${x + 3} ${top} Q${x + 10} ${top + 1} ${x + 12} ${ey} Q${x + 4} ${bot + 1} ${x - 12} ${ey}Z`;
+    const ir = Math.min(5.6, hgt * 0.95);
+    return `<path d="${shape}" fill="#fbf7f4"/>` +
+      (hgt > 2 ? `<circle cx="${x}" cy="${ey - 0.5}" r="${ir}" fill="url(#ir)"/><circle cx="${x}" cy="${ey - 0.5}" r="${ir * 0.45}" fill="#1e1411"/><circle cx="${x + 1.8}" cy="${ey - 2.4}" r="1.3" fill="#fff"/>` : "") +
+      `<path d="M${x - 12.5} ${ey + 0.5} Q${x - 4} ${top - 2.6} ${x + 3} ${top - 0.6} Q${x + 10} ${top + 0.4} ${x + 12.5} ${ey}" stroke="${L}" stroke-width="2.2" fill="none" stroke-linecap="round"/>` +
+      `<path d="M${x + s * 11} ${ey - hgt * 0.3} L${x + s * 14.5} ${ey - hgt * 0.75}" stroke="${L}" stroke-width="1.5" stroke-linecap="round"/>` +
+      `<path d="M${x - 8} ${top - 5} Q${x} ${top - 8} ${x + 9} ${top - 5}" stroke="${S2}" stroke-width="1.2" fill="none" opacity=".7"/>`;
   };
-  const brow = s => `<path d="M${s * 32} ${by + 2} Q${s * 21} ${by - 4} ${s * 9} ${by + p.browDown * 3 - p.browUp * 2}" stroke="${H2}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  const brow = s => {
+    const iy = by + p.browDown * 3 - p.browUp * 2;
+    return `<path d="M${s * 7} ${iy + 1} Q${s * 18} ${by - 5} ${s * 32} ${by + 1} Q${s * 19} ${by - 1.5} ${s * 7} ${iy + 3.4}Z" fill="${H2}"/>`;
+  };
+  const nose = `<path d="M-1 0 Q-2 10 -5 15 Q-1 18 4 16" stroke="${S3}" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="-3" cy="16" rx="2.2" ry="1.2" fill="${S3}" opacity=".6"/><ellipse cx="4" cy="16" rx="2.2" ry="1.2" fill="${S3}" opacity=".6"/>`;
 
-  const w = 22 * (1 + p.smile * 0.7 - p.pucker * 0.45 - p.funnel * 0.35), h = p.open * 20, cv = p.smile * 7, my = 36;
+  const w = 26 * (1 + p.smile * 0.45 - p.pucker * 0.45 - p.funnel * 0.35), h = p.open * 20, cv = p.smile * 6, my = 34;
+  const LIP = "#c96f7d", LIP2 = "#b45a69";
   let mouth;
-  if (p.teeth > 0.3) mouth = `<path d="M${-w / 2} ${my - 3} Q0 ${my + 17} ${w / 2} ${my - 3} Q0 ${my - 1} ${-w / 2} ${my - 3}Z" fill="#a8324a"/>` +
-    `<ellipse cx="0" cy="${my + 7}" rx="${w / 4}" ry="3" fill="#ff8597"/>` +
-    `<path d="M${-w / 2 + 3} ${my - 2} Q0 ${my + 1} ${w / 2 - 3} ${my - 2} L${w / 2 - 5} ${my + 1} Q0 ${my + 3} ${-w / 2 + 5} ${my + 1}Z" fill="#fff"/>`;
-  else if (h > 2) mouth = `<ellipse cx="0" cy="${my + h / 3}" rx="${Math.max(5, w / 2)}" ry="${h / 2 + 2}" fill="#8e2a42"/><ellipse cx="0" cy="${my + h / 3 + h / 4}" rx="${Math.max(3, w / 4)}" ry="${h / 7 + 1.5}" fill="#ff8597"/>`;
-  else if (p.pucker > 0.2) mouth = `<ellipse cx="0" cy="${my}" rx="${Math.max(4.5, w / 2.6)}" ry="${3.5 + p.pucker * 3}" fill="#f37e93"/><path d="M-3 ${my} Q0 ${my - 1} 3 ${my}" stroke="#b8475c" stroke-width="1.2" fill="none"/>`;
-  else mouth = `<path d="M${-w / 2} ${my - cv * 0.5} Q0 ${my + cv + 2} ${w / 2} ${my - cv * 0.5}" stroke="#c94a62" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  if (p.teeth > 0.3) mouth = `<path d="M${-w / 2} ${my - 2} Q0 ${my + 16} ${w / 2} ${my - 2} Q0 ${my - 1} ${-w / 2} ${my - 2}Z" fill="#7d2b36"/>` +
+    `<path d="M${-w / 2 + 3} ${my - 1} Q0 ${my + 1} ${w / 2 - 3} ${my - 1} L${w / 2 - 6} ${my + 3} Q0 ${my + 4.5} ${-w / 2 + 6} ${my + 3}Z" fill="#fff"/>` +
+    `<path d="M${-w / 2} ${my - 2} Q${-w / 4} ${my - 5} 0 ${my - 3} Q${w / 4} ${my - 5} ${w / 2} ${my - 2}" stroke="${LIP}" stroke-width="2.4" fill="none" stroke-linecap="round"/>` +
+    `<path d="M${-w / 2 + 2} ${my + 2} Q0 ${my + 18} ${w / 2 - 2} ${my + 2}" stroke="${LIP}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+  else if (h > 2) mouth = `<ellipse cx="0" cy="${my + h / 3}" rx="${Math.max(6, w / 2)}" ry="${h / 2 + 2}" fill="#7d2b36" stroke="${LIP}" stroke-width="3.4"/><ellipse cx="0" cy="${my + h / 3 + h / 4}" rx="${Math.max(3, w / 4)}" ry="${h / 7 + 1.5}" fill="#d97b89"/>`;
+  else if (p.pucker > 0.2) {
+    const pw = Math.max(6, w / 2.4), ph = 4 + p.pucker * 3;
+    mouth = `<ellipse cx="0" cy="${my}" rx="${pw}" ry="${ph}" fill="${LIP}"/><path d="M${-pw * 0.6} ${my} Q0 ${my - 1.2} ${pw * 0.6} ${my}" stroke="${LIP2}" stroke-width="1.3" fill="none"/>` +
+      `<ellipse cx="${-pw * 0.3}" cy="${my + ph * 0.45}" rx="${pw * 0.25}" ry="1" fill="#fff" opacity=".35"/>`;
+  } else {
+    const cy2 = my - cv * 0.5;
+    mouth = `<path d="M${-w / 2} ${cy2} Q${-w / 4} ${my - 4} 0 ${my - 2.4} Q${w / 4} ${my - 4} ${w / 2} ${cy2} Q0 ${my + cv * 0.6} ${-w / 2} ${cy2}Z" fill="${LIP}"/>` +
+      `<path d="M${-w / 2 + 1} ${cy2 + 0.5} Q0 ${my + 7 + cv * 0.4} ${w / 2 - 1} ${cy2 + 0.5} Q0 ${my + cv * 0.6 + 0.5} ${-w / 2 + 1} ${cy2 + 0.5}Z" fill="${LIP2}" opacity=".85"/>` +
+      `<path d="M${-w / 2} ${cy2} Q0 ${my + cv * 0.6 + 0.5} ${w / 2} ${cy2}" stroke="#8f3c4a" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+  }
 
-  const blushY = 18 - p.cheekUp * 6 - p.smile * 3, blushR = 9 + p.puff * 8 - p.suck * 3;
-  const blush = [-1, 1].map(s => {
-    const bx = s * 34;
-    return `<ellipse cx="${bx}" cy="${blushY}" rx="${blushR + 3}" ry="${blushR * 0.6}" fill="#ff8fa3" opacity="0.5"/>` +
-      [-1, 0, 1].map(i => `<path d="M${bx + i * 5 - 2} ${blushY + 2.5} L${bx + i * 5 + 2} ${blushY - 2.5}" stroke="#ff6b88" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>`).join("");
-  }).join("");
-  const suck = p.suck > 0.2 ? [-1, 1].map(s => `<path d="M${s * 42} 6 Q${s * 32} 22 ${s * 38} 40" stroke="${S2}" stroke-width="2.6" fill="none" stroke-linecap="round" opacity="${p.suck}"/>`).join("") : "";
-  const R_ = c.rays === "eyes" ? rays(-46, -4, -1, p.prog) + rays(46, -4, 1, p.prog)
+  const blushY = 20 - p.cheekUp * 6 - p.smile * 3, blushR = 10 + p.puff * 8 - p.suck * 3;
+  const blush = [-1, 1].map(s => `<ellipse cx="${s * 32}" cy="${blushY}" rx="${blushR + 3}" ry="${blushR * 0.6}" fill="#ee9a9a" opacity="0.28"/>`).join("");
+  const suck = p.suck > 0.2 ? [-1, 1].map(s => `<path d="M${s * 40} 4 Q${s * 31} 20 ${s * 36} 38" stroke="${S3}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="${p.suck * 0.8}"/>`).join("") : "";
+  const smileLines = p.smile > 0.6 ? [-1, 1].map(s => `<path d="M${s * 17} 22 Q${s * 22} 30 ${s * 19} 38" stroke="${S2}" stroke-width="1.4" fill="none" opacity="${(p.smile - 0.6) * 2}"/>`).join("") : "";
+  const R_ = c.rays === "eyes" ? rays(-44, -6, -1, p.prog) + rays(44, -6, 1, p.prog)
     : c.rays === "cheeks" ? rays(-rx + 2, 22, -1, p.prog) + rays(rx - 2, 22, 1, p.prog)
-    : c.rays === "mouth" ? rays(-14, 40, -1, p.prog * 0.9) + rays(14, 40, 1, p.prog * 0.9) : "";
+    : c.rays === "mouth" ? rays(-14, 38, -1, p.prog * 0.9) + rays(14, 38, 1, p.prog * 0.9) : "";
   const arrows = (c.arrows || []).map(([x1, y1, x2, y2]) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#ff3d77" stroke-width="3.5" stroke-linecap="round" marker-end="url(#ah)" opacity="${p.prog}"/>`).join("");
-  const neckLines = up > 0.5 ? `<path d="M-8 72 Q0 75 8 72 M-10 82 Q0 85 10 82" stroke="${S2}" stroke-width="2" fill="none" opacity="${up}"/>` : "";
-  const sideLock = s => `<path d="M${s * (rx + 6)} -34 Q${s * (rx + 12)} 14 ${s * (rx - 2)} 52 Q${s * (rx - 4)} 12 ${s * (rx - 6)} -20Z" fill="${H}"/>`;
-  const bangs = `<path d="M${-rx - 6} -10 Q${-rx - 2} -82 0 -84 Q${rx + 2} -82 ${rx + 6} -10 L${rx - 6} -40 L${rx - 14} -30 L${rx * 0.42} -52 L${rx * 0.26} -33 L${rx * 0.08} -54 L${-rx * 0.1} -34 L${-rx * 0.3} -54 L${-rx * 0.44} -32 L${-rx + 14} -46 L${-rx + 6} -28 Z" fill="${H}"/>`;
+  const neckLines = up > 0.5 ? `<path d="M-8 74 Q0 77 8 74 M-10 84 Q0 87 10 84" stroke="${S2}" stroke-width="1.8" fill="none" opacity="${up}"/>` : "";
+  const backHair = `<path d="M${-rx - 12} -20 Q${-rx - 16} -92 0 -94 Q${rx + 16} -92 ${rx + 12} -20 Q${rx + 18} 50 ${rx + 8} 84 Q${rx - 6} 92 ${rx - 16} 80 L${-rx + 16} 80 Q${-rx + 6} 92 ${-rx - 8} 84 Q${-rx - 18} 50 ${-rx - 12} -20Z" fill="${H}"/>`;
+  const fringe = `<path d="M${-rx - 4} -6 Q${-rx - 6} -84 6 -86 Q${rx + 6} -84 ${rx + 4} -10 Q${rx - 2} -44 ${rx * 0.35} -52 Q${-rx * 0.15} -58 ${-rx * 0.62} -36 Q${-rx + 4} -24 ${-rx - 4} -6Z" fill="${H}"/>` +
+    `<path d="M${-rx * 0.6} -38 Q${-rx * 0.1} -60 ${rx * 0.4} -54" stroke="${H2}" stroke-width="2" fill="none" opacity=".8"/>` +
+    `<path d="M${-rx * 0.35} -74 Q${rx * 0.05} -84 ${rx * 0.45} -76" stroke="#fff" stroke-opacity=".18" stroke-width="5" fill="none" stroke-linecap="round"/>`;
   return `<svg viewBox="-110 -132 220 264" xmlns="http://www.w3.org/2000/svg">
   <defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#ff3d77"/></marker>
-  <linearGradient id="ir" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1846"/><stop offset=".55" stop-color="#7a4fb0"/><stop offset="1" stop-color="#d6a6ff"/></linearGradient></defs>
-  <path d="M-100 132 Q-96 96 -42 90 L42 90 Q96 96 100 132Z" fill="#c9b3e6"/><path d="M-22 90 L0 108 L22 90" stroke="#fff" stroke-width="4" fill="none" stroke-linejoin="round"/>
+  <radialGradient id="ir" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#8a5a3c"/><stop offset="1" stop-color="#4a2e20"/></radialGradient></defs>
+  <g transform="translate(0 ${fy})">${backHair}</g>
+  <path d="M-100 132 Q-96 98 -44 92 L44 92 Q96 98 100 132Z" fill="#b9c7e6"/><path d="M-24 92 Q0 112 24 92" stroke="#9fb0d6" stroke-width="3" fill="none"/>
   <g transform="translate(0 ${fy})">
-    <rect x="-15" y="40" width="30" height="58" rx="8" fill="${S2}"/>${neckLines}
+    <path d="M-15 40 L-16 96 Q0 102 16 96 L15 40Z" fill="${S2}"/>${neckLines}
     <g transform="scale(1 ${sy})">
-      <circle cx="0" cy="-90" r="21" fill="${H}"/><path d="M-10 -100 Q0 -106 10 -100" stroke="#fff" stroke-opacity=".3" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <ellipse cx="0" cy="-12" rx="${rx + 10}" ry="76" fill="${H}"/>
+      <ellipse cx="${-rx}" cy="-2" rx="6" ry="11" fill="${S2}"/><ellipse cx="${rx}" cy="-2" rx="6" ry="11" fill="${S2}"/>
+      <circle cx="${-rx}" cy="10" r="2.4" fill="#e8d9b0"/><circle cx="${rx}" cy="10" r="2.4" fill="#e8d9b0"/>
       ${face}
-      ${bangs}${sideLock(-1)}${sideLock(1)}
-      <path d="M${-rx * 0.5} -70 Q0 -79 ${rx * 0.5} -70" stroke="#fff" stroke-opacity=".28" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <path d="M${-rx + 4} -50 Q0 -86 ${rx - 4} -50" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round"/>
-      ${glow}${blush}${suck}${brow(-1)}${brow(1)}${eye(-24)}${eye(24)}
-      <path d="M1 14 L-1 17" stroke="${S2}" stroke-width="2.2" stroke-linecap="round"/>
-      ${mouth}${R_}${arrows}
+      ${fringe}
+      <path d="M${-rx + 2} -46 Q0 -84 ${rx - 2} -46" stroke="#f4f0ec" stroke-width="7" fill="none" stroke-linecap="round"/>
+      ${glow}${blush}${suck}${smileLines}${brow(-1)}${brow(1)}${eye(-22)}${eye(22)}
+      ${nose}${mouth}${R_}${arrows}
     </g>
     ${hands(c.hand, t, p.prog)}
   </g></svg>`;
